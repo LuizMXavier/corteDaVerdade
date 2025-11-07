@@ -8,4 +8,15 @@ Inspirado em jogos de construção de palavras como *Scrabble*, este jogo propõ
 
 Mais do que um simples jogo, *Nada Mais que a Verdade* é um exercício de **pensamento formal, estratégia e abstração**, unindo conceitos de **lógica proposicional**, **programação estruturada** e **funções puras** em uma experiência interativa que estimula o aprendizado e a criatividade.  
 
-#Equipe
+---
+
+## 🧑‍🤝‍🧑 Equipe
+
+A equipe responsável por este projeto é composta por:
+
+- Heitor Didier  
+- Luiz Felipe  
+- Marcus Vinicius  
+- Nicolly Rodrigues  
+- Pedro Armando  
+- Thomaz Barros  
