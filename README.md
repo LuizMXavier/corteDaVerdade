@@ -1,20 +1,11 @@
-# cli-lib
-Command Line Interface library, for developing CLI applications and games in C. It has functions to access keyboard, screen and manage timing tasks.
+# 🎮 Nada Mais que a Verdade  
 
-## Requirements
-- This library works with the follwing OS:
-   - Linux based (Ubuntu, etc)
-   - MacOS
-- It is necessary to have GCC installed.
+## Introdução  
 
-## Usage 
-The file `main.c` has an example of how to use the Keyboard, Screen nd Timer functions. 
+O projeto **"Nada Mais que a Verdade"** foi desenvolvido como parte das atividades das disciplinas **Programação Imperativa e Funcional** e **Lógica para Computação**, com o objetivo de integrar os conhecimentos adquiridos ao longo do período em um desafio criativo e analítico.  
 
-To build this example via command line, just switch to library root directory and type the following command:
-```
-$ gcc ./src/*.c -I./include -o cli-lib-example
-```
+Inspirado em jogos de construção de palavras como *Scrabble*, este jogo propõe uma experiência voltada ao **raciocínio lógico e à formulação de proposições**. O jogador deve utilizar um conjunto limitado de **peças lógicas** — o *tilebag* — para montar fórmulas válidas e buscar a **tautologia mais complexa e valiosa possível**.  
 
-To use this library to create your own apps, simply add source and header files to your project and compile it together with your own code, 
-replacing the main.c file to your own.
+Mais do que um simples jogo, *Nada Mais que a Verdade* é um exercício de **pensamento formal, estratégia e abstração**, unindo conceitos de **lógica proposicional**, **programação estruturada** e **funções puras** em uma experiência interativa que estimula o aprendizado e a criatividade.  
 
+#Equipe
