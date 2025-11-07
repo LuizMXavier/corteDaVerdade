@@ -14,9 +14,9 @@ Mais do que um simples jogo, *Nada Mais que a Verdade* é um exercício de **pen
 
 A equipe responsável por este projeto é composta por:
 
-- Heitor Didier  
-- Luiz Felipe  
-- Marcus Vinicius  
-- Nicolly Rodrigues  
-- Pedro Armando  
-- Thomaz Barros  
+- **Heitor Didier** — [Eito2511](https://github.com/Eito2511)  
+- **Luiz Felipe** — [LuizMXavier](https://github.com/LuizMXavier)  
+- **Marcus Vinicius** — [Marcus-Vini-Tavares](https://github.com/Marcus-Vini-Tavares)  
+- **Nicolly Rodrigues** — [nicky89ck](https://github.com/nicky89ck)  
+- **Pedro Armando** — [pedrosol-dev](https://github.com/pedrosol-dev)  
+- **Thomaz Barros** — [JustaTBC](https://github.com/JustaTBC)  
