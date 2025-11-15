@@ -1,122 +1,88 @@
-🏛️ Corte da Verdade
-🎮 Um jogo de lógica proposicional baseado em tautologias
-📌 Descrição
+# 🏛️ Corte da Verdade: Um Jogo de Lógica Proposicional
 
-Corte da Verdade é um jogo educativo e interativo baseado em lógica proposicional, no qual o jogador interpreta um réu em um tribunal onde ninguém pode mentir.
-O objetivo é montar fórmulas que sejam tautologias, usando variáveis e conectores lógicos, para convencer o juiz de que seu argumento é irrefutável.
+## 📌 Descrição do Projeto
 
-O jogo combina raciocínio lógico, narrativa temática e um sistema de pontuação que incentiva o aprendizado progressivo.
+**Corte da Verdade** é um jogo educativo e interativo baseado em **lógica proposicional**. O jogador assume o papel de um réu em um tribunal onde a regra fundamental é: **ninguém pode mentir**.
 
-🧠 Conceitos Fundamentais
+O objetivo central do jogo é construir fórmulas lógicas que sejam **tautologias** (argumentos sempre verdadeiros) para provar a irrefutabilidade da sua defesa perante o juiz.
 
-O jogador deve montar fórmulas usando:
+O projeto visa combinar raciocínio lógico, narrativa temática e um sistema de pontuação para incentivar o aprendizado progressivo dos conceitos de lógica.
 
-Variáveis proposicionais:
-p, q, r
+---
 
-Conectores lógicos:
+## 🧠 Conceitos Fundamentais
 
-v — OU
+O jogador deve manipular os seguintes elementos para construir suas fórmulas:
 
-^ — E
+### 1. Variáveis Proposicionais (Afirmações do Caso)
+* **p:** “O réu é culpado.”
+* **q:** “A testemunha está dizendo a verdade.”
+* **r:** “A prova apresentada é válida.”
 
-~ — NÃO
+### 2. Conectores Lógicos
+| Símbolo | Nome | Representação |
+| :---: | :--- | :--- |
+| **v** | OU | Disjunção |
+| **^** | E | Conjunção |
+| **~** | NÃO | Negação |
+| **->** | Implicação | Condicional |
+| **<->** | Bicondicional | Dupla Implicação |
 
--> — Implicação
+**Regra de Validade:** A fórmula só é aceita se for uma **tautologia** (Verdadeira em todas as linhas da Tabela Verdade).
 
-<-> — Bicondicional
+---
 
-Parênteses:
-Para estruturar fórmulas complexas.
+## 🧩 Como Funciona Cada Rodada
 
-Uma fórmula é considerada válida apenas se for uma tautologia — ou seja, verdadeira em todas as combinações de valores possíveis.
+O jogador recebe um conjunto limitado de peças lógicas (variáveis e conectores) e tem **3 tentativas** para criar uma tautologia.
 
-🏛️ Narrativa do Jogo
+### Fluxo e Dicas
+1.  **Montagem:** O jogador constrói uma fórmula bem formada (Ex: `p v ~p`).
+2.  **1ª Tentativa:**
+    * **Acerto:** Pontuação máxima. Rodada encerrada.
+    * **Erro:** Recebe uma **dica em linguagem natural**.
+3.  **2ª Tentativa:**
+    * **Acerto:** Pontuação intermediária.
+    * **Erro:** Recebe uma **dica mais técnica** (sobre leis lógicas, como De Morgan, etc.).
+4.  **3ª Tentativa:** Último esforço para obter a tautologia.
 
-O cenário é a Corte da Verdade, um tribunal especial onde nenhuma mentira é permitida.
+---
 
-Cada variável representa uma afirmação sobre o caso:
+## 📈 Sistema de Pontuação
 
-p: “O réu é culpado.”
+### ✔️ Pontuação por Tautologias
+| Tentativa de Acerto | Pontuação |
+| :---: | :---: |
+| 1ª tentativa | **50 pontos** |
+| 2ª tentativa | **30 pontos** |
+| 3ª tentativa | **20 pontos** |
 
-q: “A testemunha está dizendo a verdade.”
+### ✔️ Pontuação por Linhas Verdadeiras (Se falhar)
+Se a fórmula final não for uma tautologia, o jogador ganha **1 ponto por cada linha verdadeira (V)** na Tabela Verdade da última fórmula submetida.
 
-r: “A prova apresentada é válida.”
+| Variáveis na Fórmula | Número de Linhas (Total) |
+| :---: | :---: |
+| 1 variável ($p$) | 2 linhas |
+| 2 variáveis ($p, q$) | 4 linhas |
+| 3 variáveis ($p, q, r$) | 8 linhas |
 
-O juiz só aceita argumentos que sejam logicamente perfeitos: tautologias.
+---
 
-🎯 Objetivo do Jogador
+## 🔥 Níveis de Dificuldade
 
-Em cada rodada, o jogador recebe um conjunto de peças lógicas e deve:
+O nível de dificuldade é determinado pelo número de variáveis permitidas na construção da fórmula:
 
-Criar uma fórmula bem formada.
+| Nível | Variáveis Permitidas | Exemplo de Tautologia |
+| :---: | :---: | :--- |
+| **1 – Básico** | 1 variável | `p v ~p` |
+| **2 – Intermediário** | 2 variáveis | `(p ^ q) -> p` |
+| **3 – Avançado** | 3 variáveis | `(p ^ (q v r)) -> p` |
 
-Tentar transformá-la em uma tautologia.
+---
 
-Usar até 3 tentativas por rodada.
+## 🏁 Encerramento
 
-Receber pontuação conforme seu desempenho.
-
-Mesmo que não acerte a tautologia, a fórmula final gera pontos através da tabela verdade.
-
-🧩 Como Funciona Cada Rodada
-
-O jogo apresenta um conjunto de peças (variáveis e conectores).
-Ex: p, p, v, ~ → permite criar p v ~p.
-
-O jogador monta a 1ª tentativa.
-
-Se for tautologia → rodada encerrada com pontuação máxima.
-
-Se errar, recebe uma dica em linguagem natural.
-
-Na 2ª tentativa, pode acertar e ganhar pontuação intermediária.
-
-Se errar novamente, recebe uma dica mais técnica.
-
-Na 3ª tentativa, faz o último esforço para obter uma tautologia.
-
-Se falhar nas 3 tentativas:
-
-O jogo monta a tabela verdade da última fórmula.
-
-O jogador ganha 1 ponto por linha verdadeira.
-
-📈 Pontuação
-✔️ Tautologias:
-
-1ª tentativa: 50 pontos
-
-2ª tentativa: 30 pontos
-
-3ª tentativa: 20 pontos
-
-✔️ Se não for tautologia:
-
-Pontuação baseada no número de linhas verdade:
-
-Fórmula com 1 variável → 2 linhas
-
-Fórmula com 2 variáveis → 4 linhas
-
-Fórmula com 3 variáveis → 8 linhas
-
-Cada linha com resultado V = 1 ponto.
-
-🔥 Níveis de Dificuldade
-
-O jogo varia conforme o número de variáveis permitidas:
-
-Nível	Variáveis	Exemplo
-1 – Básico	1 variável	p v ~p
-2 – Intermediário	2 variáveis	(p ^ q) -> p
-3 – Avançado	3 variáveis	(p ^ (q v r)) -> p
-🏁 Encerramento da Sessão
-
-Após um conjunto de rodadas, o jogo soma a pontuação total.
-O resultado representa o desempenho lógico do jogador naquela sessão.
-
-O jogador pode tentar superar seus próprios recordes e melhorar a habilidade de raciocínio lógico.
+Após um conjunto de rodadas, a pontuação total da sessão é somada, permitindo ao jogador acompanhar seu desempenho lógico e tentar superar seus próprios recordes.
 ---
 
 ## 🧑‍🤝‍🧑 Equipe
