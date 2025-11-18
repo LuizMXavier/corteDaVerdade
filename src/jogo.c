@@ -2,9 +2,26 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <ctype.h>
 #include "jogo.h"
 #include "screen.h"
 #include "keyboard.h"
+
+// ---------------------------------------------------------
+// Ranking (leaderboard)
+// ---------------------------------------------------------
+
+#define MAX_RANK 10
+#define NOME_MAX 32
+#define RANK_FILE "rank.dat"
+
+typedef struct {
+    char nome[NOME_MAX];
+    int pontos;
+} RankEntry;
+
+static RankEntry g_rank[MAX_RANK];
+static int g_rank_count = 0;
 
 // ---------------------------------------------------------
 // Definição dos 15 níveis
@@ -20,7 +37,7 @@ const Nivel NIVEIS[15] = {
         "p: O réu é culpado.",
         "O réu é culpado OU NÃO é culpado.",
         RESULT_TAUTOLOGIA,
-        { "->", "p", "q", "v", "^", "~", "<->", "p" },
+        { "p", "v", "~", "p", "p", "v", "~", "p" },
         8
     },
     {
@@ -29,7 +46,7 @@ const Nivel NIVEIS[15] = {
         "p: A moção é válida.",
         "NÃO é verdade que a moção é válida E NÃO é válida.",
         RESULT_TAUTOLOGIA,
-        { "p", "p", "v", "^", "~", "->", "<->", "p" },
+        { "p", "^", "~", "p", "~", "p", "^", "p" },
         8
     },
     {
@@ -38,7 +55,7 @@ const Nivel NIVEIS[15] = {
         "p: A evidência é admitida.",
         "SE a evidência é admitida, ENTÃO a evidência é admitida.",
         RESULT_TAUTOLOGIA,
-        { "p", "p", "v", "^", "~", "->", "<->", "p" },
+        { "p", "->", "p", "p", "->", "p", "p", "->" },
         8
     },
     {
@@ -47,7 +64,7 @@ const Nivel NIVEIS[15] = {
         "p: O veredito é definitivo.",
         "O veredito é definitivo SE, E SOMENTE SE, o veredito é definitivo.",
         RESULT_TAUTOLOGIA,
-        { "p", "p", "v", "^", "~", "->", "<->", "p" },
+        { "p", "<->", "p", "p", "<->", "p", "p", "<->" },
         8
     },
     {
@@ -56,7 +73,7 @@ const Nivel NIVEIS[15] = {
         "p: A audiência será marcada.",
         "SE NÃO é verdade que a audiência NÃO será marcada, ENTÃO a audiência será marcada.",
         RESULT_TAUTOLOGIA,
-        { "p", "p", "v", "^", "~", "->", "<->", "p" },
+        { "~", "~", "p", "->", "p", "~", "p", "->" },
         8
     },
 
@@ -67,7 +84,7 @@ const Nivel NIVEIS[15] = {
         "p: A corte está em sessão. q: O caso foi arquivado.",
         "SE a corte está em sessão, ENTÃO a corte está em sessão OU o caso foi arquivado.",
         RESULT_TAUTOLOGIA,
-        { "p", "q", "v", "^", "~", "->", "<->", "p" },
+        { "p", "->", "p", "v", "q", "p", "v", "q" },
         8
     },
     {
@@ -76,7 +93,7 @@ const Nivel NIVEIS[15] = {
         "p: O promotor provou o crime. q: O juiz aceitou a prova.",
         "SE o promotor provou o crime E o juiz aceitou a prova, ENTÃO o promotor provou o crime.",
         RESULT_TAUTOLOGIA,
-        { "p", "q", "v", "^", "~", "->", "<->", "p" },
+        { "p", "^", "q", "->", "p", "p", "^", "q" },
         8
     },
     {
@@ -86,7 +103,7 @@ const Nivel NIVEIS[15] = {
         "SE a lei é constitucional E (SE a lei é constitucional, ENTÃO o réu será condenado), "
         "ENTÃO o réu será condenado. (Modus Ponens)",
         RESULT_TAUTOLOGIA,
-        { "p", "q", "v", "^", "~", "->", "<->", "p" },
+        { "p", "^", "p", "->", "q", "->", "q", "p" },
         8
     },
     {
@@ -96,7 +113,7 @@ const Nivel NIVEIS[15] = {
         "NÃO (SE o oficial testemunhou, ENTÃO o réu será solto) SE, E SOMENTE SE, "
         "o oficial testemunhou E NÃO o réu será solto.",
         RESULT_TAUTOLOGIA,
-        { "p", "q", "v", "^", "~", "->", "<->", "p" },
+        { "~", "p", "->", "q", "<->", "p", "^", "~" },
         8
     },
     {
@@ -106,7 +123,7 @@ const Nivel NIVEIS[15] = {
         "SE o crime foi premeditado OU a fiança será negada, E NÃO o crime foi premeditado, "
         "ENTÃO a fiança será negada. (Silogismo Disjuntivo)",
         RESULT_TAUTOLOGIA,
-        { "p", "q", "v", "^", "~", "->", "<->", "p" },
+        { "p", "v", "q", "^", "~", "p", "->", "q" },
         8
     },
 
@@ -120,7 +137,7 @@ const Nivel NIVEIS[15] = {
         "ENTÃO (SE o depoimento é aceito, ENTÃO a decisão é justa). "
         "(Silogismo Hipotético)",
         RESULT_TAUTOLOGIA,
-        { "p", "q", "r", "v", "^", "~", "->", "<->" },
+        { "p", "->", "q", "^", "q", "->", "r", "p" },
         8
     },
     {
@@ -130,7 +147,7 @@ const Nivel NIVEIS[15] = {
         "SE (SE o crime foi grave, ENTÃO a pena é máxima E NÃO há recurso), "
         "ENTÃO (SE o crime foi grave, ENTÃO a pena é máxima).",
         RESULT_TAUTOLOGIA,
-        { "p", "q", "r", "v", "^", "~", "->", "<->" },
+        { "p", "->", "q", "^", "r", "->", "p", "->" },
         8
     },
     {
@@ -141,7 +158,7 @@ const Nivel NIVEIS[15] = {
         "SE, E SOMENTE SE, (SE o juiz decide hoje E NÃO a defesa apela, "
         "ENTÃO o réu aguarda em liberdade).",
         RESULT_TAUTOLOGIA,
-        { "p", "q", "r", "v", "^", "~", "->", "<->" },
+        { "p", "->", "q", "v", "r", "<->", "p", "^" },
         8
     },
     {
@@ -152,7 +169,7 @@ const Nivel NIVEIS[15] = {
         "SE, E SOMENTE SE, (SE a prova A é conclusiva, ENTÃO o réu será absolvido "
         "E SE a prova B é conclusiva, ENTÃO o réu será absolvido). (Lei da Distribuição)",
         RESULT_TAUTOLOGIA,
-        { "p", "q", "r", "v", "^", "~", "->", "<->" },
+        { "p", "v", "q", "->", "r", "<->", "p", "->" },
         8
     },
     {
@@ -163,7 +180,7 @@ const Nivel NIVEIS[15] = {
         "(SE o ato foi doloso, ENTÃO (SE o dano foi causado, ENTÃO haverá indenização)). "
         "(Lei da Exportação)",
         RESULT_TAUTOLOGIA,
-        { "p", "q", "r", "v", "^", "~", "->", "<->" },
+        { "p", "^", "q", "->", "r", "<->", "p", "->" },
         8
     }
 };
@@ -227,8 +244,20 @@ static int contar_verdadeiras(const TabelaVerdade *tab) {
     return count;
 }
 
+// Remove espaços e normaliza para comparação de fórmulas
+static void normalizar_formula(const char *src, char *dst, size_t tam) {
+    size_t j = 0;
+    for (size_t i = 0; src[i] != '\0' && j < tam - 1; i++) {
+        unsigned char c = (unsigned char)src[i];
+        if (c == ' ' || c == '\t' || c == '\r' || c == '\n')
+            continue;
+        dst[j++] = (char)tolower(c);
+    }
+    dst[j] = '\0';
+}
+
 // ---------------------------------------------------------
-// Encerrar jogo via ESC
+// Encerrar jogo via ESC / leitura básica
 // ---------------------------------------------------------
 
 static void encerrar_por_esc(void) {
@@ -257,10 +286,10 @@ static void esperar_enter() {
     } while (ch != '\n' && ch != '\r');
 }
 
-// lê fórmula em uma linha; ESC sai do jogo
-static void ler_formula(char *expr, size_t tam, int x, int y) {
+// lê linha genérica (usado para fórmulas e nome do réu)
+static void ler_linha(char *buf, size_t tam, int x, int y) {
     size_t len = 0;
-    expr[0] = '\0';
+    buf[0] = '\0';
     screenGotoxy(x, y);
     screenShowCursor();
     screenUpdate();
@@ -272,12 +301,12 @@ static void ler_formula(char *expr, size_t tam, int x, int y) {
             screenUpdate();
             encerrar_por_esc();
         } else if (ch == '\n' || ch == '\r') {
-            expr[len] = '\0';
+            buf[len] = '\0';
             break;
         } else if (ch == 8 || ch == 127) { // backspace
             if (len > 0) {
                 len--;
-                expr[len] = '\0';
+                buf[len] = '\0';
                 screenGotoxy(x + (int)len, y);
                 printf(" ");
                 screenGotoxy(x + (int)len, y);
@@ -285,7 +314,7 @@ static void ler_formula(char *expr, size_t tam, int x, int y) {
             }
         } else if (ch >= 32 && ch < 127) { // caractere imprimível
             if (len < tam - 1) {
-                expr[len++] = (char)ch;
+                buf[len++] = (char)ch;
                 putchar(ch);
                 screenUpdate();
             }
@@ -296,7 +325,15 @@ static void ler_formula(char *expr, size_t tam, int x, int y) {
     screenUpdate();
 }
 
-// Regras de variáveis permitidas por nível
+// Wrapper antigo para fórmulas
+static void ler_formula(char *expr, size_t tam, int x, int y) {
+    ler_linha(expr, tam, x, y);
+}
+
+// ---------------------------------------------------------
+// Validação de variáveis permitidas por nível
+// ---------------------------------------------------------
+
 static int variaveis_validas(const Nivel *n, const char *expr, char *msg, size_t tam_msg) {
     char tipo = n->codigo[0]; // 'F', 'M' ou 'D'
     int permite_q = (tipo != 'F');    // F: não
@@ -322,7 +359,110 @@ static int variaveis_validas(const Nivel *n, const char *expr, char *msg, size_t
     return 1;
 }
 
-// Animação de transição entre níveis (simples)
+// ---------------------------------------------------------
+// Ranking: carregar, salvar, atualizar e mostrar
+// ---------------------------------------------------------
+
+static int cmp_rank(const void *a, const void *b) {
+    const RankEntry *ra = (const RankEntry *)a;
+    const RankEntry *rb = (const RankEntry *)b;
+    if (rb->pontos != ra->pontos)
+        return rb->pontos - ra->pontos; // decrescente
+    return 0;
+}
+
+static void carregar_rank(void) {
+    g_rank_count = 0;
+
+    FILE *f = fopen(RANK_FILE, "r");
+    if (!f) return;
+
+    char linha[128];
+    while (fgets(linha, sizeof(linha), f) && g_rank_count < MAX_RANK) {
+        int pts;
+        char nome[NOME_MAX];
+        if (sscanf(linha, "%d;%31[^\n]", &pts, nome) == 2) {
+            g_rank[g_rank_count].pontos = pts;
+            strncpy(g_rank[g_rank_count].nome, nome, NOME_MAX - 1);
+            g_rank[g_rank_count].nome[NOME_MAX - 1] = '\0';
+            g_rank_count++;
+        }
+    }
+    fclose(f);
+
+    if (g_rank_count > 1)
+        qsort(g_rank, g_rank_count, sizeof(RankEntry), cmp_rank);
+}
+
+static void salvar_rank(void) {
+    FILE *f = fopen(RANK_FILE, "w");
+    if (!f) return;
+
+    if (g_rank_count > 1)
+        qsort(g_rank, g_rank_count, sizeof(RankEntry), cmp_rank);
+
+    for (int i = 0; i < g_rank_count; i++) {
+        fprintf(f, "%d;%s\n", g_rank[i].pontos, g_rank[i].nome);
+    }
+    fclose(f);
+}
+
+static void atualizar_rank(const char *nome, int pontos) {
+    if (pontos <= 0) return;
+
+    // Se já houver 10, só entra se for maior que o último
+    if (g_rank_count == MAX_RANK && pontos <= g_rank[g_rank_count - 1].pontos)
+        return;
+
+    if (g_rank_count < MAX_RANK) {
+        g_rank[g_rank_count].pontos = pontos;
+        strncpy(g_rank[g_rank_count].nome, nome, NOME_MAX - 1);
+        g_rank[g_rank_count].nome[NOME_MAX - 1] = '\0';
+        g_rank_count++;
+    } else {
+        g_rank[g_rank_count - 1].pontos = pontos;
+        strncpy(g_rank[g_rank_count - 1].nome, nome, NOME_MAX - 1);
+        g_rank[g_rank_count - 1].nome[NOME_MAX - 1] = '\0';
+    }
+
+    if (g_rank_count > 1)
+        qsort(g_rank, g_rank_count, sizeof(RankEntry), cmp_rank);
+}
+
+static void mostrar_rank(void) {
+    screenInit(1);
+
+    screenSetColor(LIGHTRED, BLACK);
+    draw_centered(SCRSTARTY + 2, "RANK - CORTE DA VERDADE");
+    screenSetColor(WHITE, BLACK);
+
+    if (g_rank_count == 0) {
+        draw_centered(SCRSTARTY + 5, "Ainda não há registros no leaderboard.");
+    } else {
+        int y = SCRSTARTY + 5;
+        screenGotoxy(SCRSTARTX + 4, y++);
+        printf("Pos | Nome do Réu                  | Pontos");
+        screenGotoxy(SCRSTARTX + 4, y++);
+        printf("-----------------------------------------------");
+
+        for (int i = 0; i < g_rank_count; i++) {
+            screenGotoxy(SCRSTARTX + 4, y++);
+            printf("%2d. | %-26s | %5d",
+                   i + 1,
+                   g_rank[i].nome,
+                   g_rank[i].pontos);
+        }
+    }
+
+    draw_centered(SCRSTARTY + 17, "Pressione ENTER para voltar ao menu...");
+    screenUpdate();
+    esperar_enter();
+}
+
+// ---------------------------------------------------------
+// Animação de transição e intro
+// ---------------------------------------------------------
+
 static void anim_transicao(int proximo_numero_nivel) {
     if (proximo_numero_nivel < 1 || proximo_numero_nivel > NUM_NIVEIS) return;
 
@@ -347,10 +487,6 @@ static void anim_transicao(int proximo_numero_nivel) {
         usleep(250000); // 0,25 s
     }
 }
-
-// ---------------------------------------------------------
-// Tela de introdução (sem pontilhado interno)
-// ---------------------------------------------------------
 
 static void intro_animation() {
     screenInit(1);
@@ -386,7 +522,110 @@ static void intro_animation() {
 }
 
 // ---------------------------------------------------------
-// Um nível do jogo (layout baseado nos mockups)
+// Menu principal e tutorial
+// ---------------------------------------------------------
+
+static int menu_principal(void) {
+    for (;;) {
+        screenInit(1);
+
+        screenSetColor(LIGHTRED, BLACK);
+        draw_centered(SCRSTARTY + 2, "CORTE DA VERDADE");
+        screenSetColor(WHITE, BLACK);
+
+        draw_centered(SCRSTARTY + 5, "[1] Iniciar julgamento");
+        draw_centered(SCRSTARTY + 7, "[2] Rank (Leaderboard)");
+        draw_centered(SCRSTARTY + 9, "[3] Tutorial");
+        draw_centered(SCRSTARTY + 11, "[0] Sair");
+
+        draw_centered(SCRSTARTY + 14, "Pressione 1, 2, 3 ou 0 para escolher.");
+        screenUpdate();
+
+        int ch = readch();
+        if (ch == 27) {
+            encerrar_por_esc();
+        } else if (ch == '1') {
+            return 1;
+        } else if (ch == '2') {
+            return 2;
+        } else if (ch == '3') {
+            return 3;
+        } else if (ch == '0') {
+            return 0;
+        }
+    }
+}
+
+static void mostrar_tutorial(void) {
+    screenInit(1);
+
+    screenSetColor(LIGHTRED, BLACK);
+    draw_centered(SCRSTARTY + 1, "TUTORIAL - CORTE DA VERDADE");
+    screenSetColor(WHITE, BLACK);
+
+    int x = SCRSTARTX + 4;
+    int y = SCRSTARTY + 3;
+
+    screenGotoxy(x, y++);
+    printf("- Você é o Réu. Cada nível é um caso lógico.");
+    screenGotoxy(x, y++);
+    printf("- Use as Provas (p, q, r e conectivos) para montar a DEFESA.");
+    screenGotoxy(x, y++);
+    printf("- São 15 níveis (5 fáceis, 5 médios, 5 difíceis).");
+    screenGotoxy(x, y++);
+    printf("- Em cada nível existe uma fórmula-alvo específica.");
+    screenGotoxy(x, y++);
+    printf("- Só será aceito o depoimento que corresponder à fórmula do nível.");
+    screenGotoxy(x, y++);
+    printf("- Você tem 3 tentativas por nível:");
+    screenGotoxy(x + 2, y++);
+    printf("* 1a tentativa correta: 50 pontos");
+    screenGotoxy(x + 2, y++);
+    printf("* 2a tentativa correta: 30 pontos");
+    screenGotoxy(x + 2, y++);
+    printf("* 3a tentativa correta: 20 pontos");
+    screenGotoxy(x, y++);
+    printf("- Se errar todas, a Corte analisa sua última fórmula e");
+    screenGotoxy(x, y++);
+    printf("  cada linha VERDADEIRA da tabela-verdade vale 1 ponto extra.");
+    screenGotoxy(x, y++);
+    printf("- Não é permitido repetir a mesma expressão no mesmo nível.");
+    screenGotoxy(x, y++);
+    printf("- ESC sempre encerra o jogo imediatamente.");
+    screenGotoxy(x, y++);
+    printf("- Ao final, sua pontuação pode entrar no Rank (Top 10).");
+
+    draw_centered(SCRSTARTY + 17, "Pressione ENTER para voltar ao menu...");
+    screenUpdate();
+    esperar_enter();
+}
+
+// ---------------------------------------------------------
+// Nome do réu
+// ---------------------------------------------------------
+
+static void pedir_nome_reu(char *nome, size_t tam) {
+    screenInit(1);
+
+    screenSetColor(LIGHTRED, BLACK);
+    draw_centered(SCRSTARTY + 3, "CORTE DA VERDADE");
+    screenSetColor(WHITE, BLACK);
+    draw_centered(SCRSTARTY + 5, "Informe o nome do Réu:");
+
+    screenGotoxy(SCRSTARTX + 4, SCRSTARTY + 7);
+    printf("Nome do Réu: ");
+    int x_input = SCRSTARTX + 4 + (int)strlen("Nome do Réu: ");
+
+    ler_linha(nome, tam, x_input, SCRSTARTY + 7);
+
+    if (nome[0] == '\0') {
+        strncpy(nome, "Anonimo", tam - 1);
+        nome[tam - 1] = '\0';
+    }
+}
+
+// ---------------------------------------------------------
+// Jogabilidade de um nível (com checagem de fórmula-alvo)
 // ---------------------------------------------------------
 
 static void jogar_nivel(const Nivel *n, int indice_nivel, int *pontuacao) {
@@ -397,7 +636,14 @@ static void jogar_nivel(const Nivel *n, int indice_nivel, int *pontuacao) {
     memset(&ultima_tab, 0, sizeof(ultima_tab));
     ResultadoFormula ultimo_res = RESULT_CONTINGENCIA;
 
-    (void)indice_nivel; // ainda não usamos diretamente
+    (void)indice_nivel; // não usado diretamente por enquanto
+
+    char alvo_norm[512];
+    normalizar_formula(n->formula, alvo_norm, sizeof(alvo_norm));
+
+    // histórico para evitar repetição de expressão no mesmo nível
+    char historico[3][512];
+    int n_hist = 0;
 
     for (int tentativa = 1; tentativa <= 3; tentativa++) {
         screenInit(1);
@@ -419,20 +665,19 @@ static void jogar_nivel(const Nivel *n, int indice_nivel, int *pontuacao) {
 
         draw_horizontal_bar(SCRSTARTY + 4, width);
 
-        // Coordenadas base (topo até meio)
+        // Coordenadas
         int y_juiz       = SCRSTARTY + 6;
-        int y_provas_lbl = y_juiz + 3;   // provas um pouco mais acima
+        int y_provas_lbl = y_juiz + 3;
         int y_provas_ln  = y_provas_lbl + 1;
         int y_defesa     = y_provas_ln + 2;
 
-        // Parte inferior baseada em MAXY
         int y_cmd_top    = MAXY - 4;
         int y_cmd_text   = y_cmd_top + 1;
         int y_cmd_bottom = y_cmd_top + 2;
 
-        int y_dep_lbl = y_cmd_top - 4;    // linha do "Depoimento:"
-        int y_dep_inp = y_dep_lbl;        // mesma linha
-        int y_msg     = y_dep_lbl + 2;    // mensagens logo abaixo
+        int y_dep_lbl = y_cmd_top - 4;
+        int y_dep_inp = y_dep_lbl;
+        int y_msg     = y_dep_lbl + 2;
 
         // Juiz
         screenGotoxy(left, y_juiz);
@@ -445,7 +690,7 @@ static void jogar_nivel(const Nivel *n, int indice_nivel, int *pontuacao) {
         screenGotoxy(left + 8, y_juiz + 1);
         printf("+-------------------------------+");
 
-        // Provas / sacola
+        // Provas
         screenGotoxy(left, y_provas_lbl);
         printf("Use as Provas para seu depoimento:");
 
@@ -476,7 +721,7 @@ static void jogar_nivel(const Nivel *n, int indice_nivel, int *pontuacao) {
         printf("%s", linha_provas);
         screenSetColor(WHITE, BLACK);
 
-        // Defesa (dica) aparece só depois do primeiro erro
+        // Defesa (dica)
         if (dica_mostrada) {
             screenGotoxy(left, y_defesa);
             printf("Defesa:");
@@ -491,12 +736,12 @@ static void jogar_nivel(const Nivel *n, int indice_nivel, int *pontuacao) {
             printf("+------------------------------------------------------+");
         }
 
-        // Depoimento na mesma linha
+        // Depoimento
         screenGotoxy(left, y_dep_lbl);
         printf("Depoimento: ");
         int x_input = left + (int)strlen("Depoimento: ");
 
-        // Barra de comandos fixa no rodapé com --- em cima e embaixo
+        // Comandos
         draw_horizontal_bar(y_cmd_top, width);
         screenGotoxy(left, y_cmd_text);
         printf("COMANDOS | ENTER: Validar | ESC: Sair");
@@ -505,6 +750,36 @@ static void jogar_nivel(const Nivel *n, int indice_nivel, int *pontuacao) {
         screenUpdate();
 
         ler_formula(expr, sizeof(expr), x_input, y_dep_inp);
+
+        // Normaliza expressão digitada
+        char expr_norm[512];
+        normalizar_formula(expr, expr_norm, sizeof(expr_norm));
+
+        // Verifica repetição na mesma fase
+        int repetida = 0;
+        for (int i = 0; i < n_hist; i++) {
+            if (strcmp(expr_norm, historico[i]) == 0) {
+                repetida = 1;
+                break;
+            }
+        }
+        if (repetida) {
+            screenGotoxy(left, y_msg);
+            screenSetColor(LIGHTRED, BLACK);
+            printf("Essa expressão já foi usada neste nível.");
+            screenSetColor(WHITE, BLACK);
+            screenGotoxy(left, y_msg + 1);
+            printf("Tente uma nova forma de defesa.");
+            screenUpdate();
+            esperar_enter();
+            tentativa--; // não consome tentativa
+            continue;
+        }
+        if (n_hist < 3) {
+            strncpy(historico[n_hist], expr_norm, sizeof(historico[n_hist]) - 1);
+            historico[n_hist][sizeof(historico[n_hist]) - 1] = '\0';
+            n_hist++;
+        }
 
         // Valida variáveis
         char msg[160];
@@ -529,7 +804,8 @@ static void jogar_nivel(const Nivel *n, int indice_nivel, int *pontuacao) {
 
         screenGotoxy(left, y_msg);
 
-        if (res == RESULT_TAUTOLOGIA) {
+        // REGRAS DE ACEITAÇÃO: precisa ser tautologia E bater com a fórmula-alvo
+        if (res == RESULT_TAUTOLOGIA && strcmp(expr_norm, alvo_norm) == 0) {
             int ganho = 0;
             if (tentativa == 1)      ganho = 50;
             else if (tentativa == 2) ganho = 30;
@@ -544,7 +820,7 @@ static void jogar_nivel(const Nivel *n, int indice_nivel, int *pontuacao) {
             screenGotoxy(left, y_msg + 1);
             printf("Você ganhou %d pontos neste nível.", ganho);
 
-            // Mensagem centralizada ENTRE a barra de comandos e a borda inferior
+            // Mensagem centralizada entre comandos e borda
             draw_centered(y_cmd_bottom + 1,
                           "Pressione ENTER para seguir para o próximo nível...");
 
@@ -615,9 +891,9 @@ static void jogar_nivel(const Nivel *n, int indice_nivel, int *pontuacao) {
         printf("Pontos extras ganhos neste nível: %d", linhas_V);
 
         screenGotoxy(SCRSTARTX + 3, linha + 4);
-        printf("Exemplo de tautologia para este caso:");
+        printf("Fórmula-alvo deste nível:");
         screenGotoxy(SCRSTARTX + 3, linha + 5);
-        printf("F_exemplo(p,q,r) = %s", n->formula);
+        printf("F_objetivo(p,q,r) = %s", n->formula);
 
         screenGotoxy(SCRSTARTX + 3, linha + 7);
         printf("Pressione ENTER para seguir para o próximo nível...");
@@ -627,13 +903,11 @@ static void jogar_nivel(const Nivel *n, int indice_nivel, int *pontuacao) {
 }
 
 // ---------------------------------------------------------
-// Loop principal
+// Execução de uma partida completa
 // ---------------------------------------------------------
 
-void jogo_corte_da_verdade(void) {
+static int executar_partida(const char *nome_reu) {
     int pontuacao = 0;
-
-    intro_animation();
 
     for (int i = 0; i < NUM_NIVEIS; i++) {
         jogar_nivel(&NIVEIS[i], i, &pontuacao);
@@ -649,9 +923,13 @@ void jogo_corte_da_verdade(void) {
     draw_centered(SCRSTARTY + 3, "FIM DO JULGAMENTO");
     screenSetColor(WHITE, BLACK);
 
+    char linha_nome[80];
+    snprintf(linha_nome, sizeof(linha_nome), "Réu: %s", nome_reu);
+    draw_centered(SCRSTARTY + 5, linha_nome);
+
     char buf[80];
     snprintf(buf, sizeof(buf), "Pontuação final acumulada: %d pontos.", pontuacao);
-    draw_centered(SCRSTARTY + 6, buf);
+    draw_centered(SCRSTARTY + 7, buf);
 
     int max_base = NUM_NIVEIS * 50; // 50 pontos por nível (sem extras)
     int faixa_alto = max_base * 80 / 100;
@@ -666,10 +944,45 @@ void jogo_corte_da_verdade(void) {
         classif = "Réu CONDENADO (Precisa revisar sua lógica).";
     }
 
-    draw_centered(SCRSTARTY + 8, classif);
-    draw_centered(SCRSTARTY + 10, "Obrigado por jogar a CORTE DA VERDADE!");
-    draw_centered(SCRSTARTY + 12, "Pressione ENTER para encerrar...");
+    draw_centered(SCRSTARTY + 9, classif);
+    draw_centered(SCRSTARTY + 12, "Pressione ENTER para voltar ao menu...");
 
+    screenUpdate();
+    esperar_enter();
+
+    return pontuacao;
+}
+
+// ---------------------------------------------------------
+// Loop principal (menu + jogo + rank)
+// ---------------------------------------------------------
+
+void jogo_corte_da_verdade(void) {
+    carregar_rank();
+
+    intro_animation();
+
+    for (;;) {
+        int opcao = menu_principal();
+        if (opcao == 0) {
+            break;
+        } else if (opcao == 1) {
+            char nome_reu[NOME_MAX];
+            pedir_nome_reu(nome_reu, sizeof(nome_reu));
+            int pontos = executar_partida(nome_reu);
+            atualizar_rank(nome_reu, pontos);
+            salvar_rank();
+        } else if (opcao == 2) {
+            mostrar_rank();
+        } else if (opcao == 3) {
+            mostrar_tutorial();
+        }
+    }
+
+    screenInit(1);
+    screenSetColor(WHITE, BLACK);
+    draw_centered(SCRSTARTY + 8, "Obrigado por jogar a CORTE DA VERDADE!");
+    draw_centered(SCRSTARTY + 10, "Pressione ENTER para sair...");
     screenUpdate();
     esperar_enter();
 }
