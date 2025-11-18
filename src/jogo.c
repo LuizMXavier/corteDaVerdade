@@ -349,31 +349,11 @@ static void anim_transicao(int proximo_numero_nivel) {
 }
 
 // ---------------------------------------------------------
-// Tela de introdução (inspirada no seu layout)
+// Tela de introdução (sem pontilhado interno)
 // ---------------------------------------------------------
 
 static void intro_animation() {
     screenInit(1);
-
-    // borda pontilhada interna alinhada
-    int left = SCRSTARTX + 2;
-    int right = MAXX - 2;
-    int top = SCRSTARTY + 2;
-    int bottom = MAXY - 2;
-
-    screenSetColor(BLUE, BLACK);
-    for (int x = left; x <= right; x++) {
-        screenGotoxy(x, top);
-        putchar('.');
-        screenGotoxy(x, bottom);
-        putchar('.');
-    }
-    for (int y = top; y <= bottom; y++) {
-        screenGotoxy(left, y);
-        putchar('.');
-        screenGotoxy(right, y);
-        putchar('.');
-    }
 
     // Título
     screenSetColor(LIGHTRED, BLACK);
@@ -406,7 +386,7 @@ static void intro_animation() {
 }
 
 // ---------------------------------------------------------
-// Um nível do jogo (layout igual aos mockups)
+// Um nível do jogo (layout baseado nos mockups)
 // ---------------------------------------------------------
 
 static void jogar_nivel(const Nivel *n, int indice_nivel, int *pontuacao) {
@@ -422,7 +402,7 @@ static void jogar_nivel(const Nivel *n, int indice_nivel, int *pontuacao) {
     for (int tentativa = 1; tentativa <= 3; tentativa++) {
         screenInit(1);
 
-        int left = SCRSTARTX + 2;
+        int left  = SCRSTARTX + 2;
         int width = 70;
 
         // Barra de topo
@@ -439,14 +419,20 @@ static void jogar_nivel(const Nivel *n, int indice_nivel, int *pontuacao) {
 
         draw_horizontal_bar(SCRSTARTY + 4, width);
 
-        // Coordenadas base
+        // Coordenadas base (topo até meio)
         int y_juiz       = SCRSTARTY + 6;
-        int y_provas_lbl = SCRSTARTY + 10;
-        int y_provas_ln  = SCRSTARTY + 12;
-        int y_defesa     = SCRSTARTY + 14;
-        int y_dep_lbl    = SCRSTARTY + 18;
-        int y_dep_inp    = y_dep_lbl + 2;
-        int y_msg        = y_dep_inp + 2;
+        int y_provas_lbl = y_juiz + 3;   // provas um pouco mais acima
+        int y_provas_ln  = y_provas_lbl + 1;
+        int y_defesa     = y_provas_ln + 2;
+
+        // Parte inferior baseada em MAXY
+        int y_cmd_top    = MAXY - 4;
+        int y_cmd_text   = y_cmd_top + 1;
+        int y_cmd_bottom = y_cmd_top + 2;
+
+        int y_dep_lbl = y_cmd_top - 4;    // linha do "Depoimento:"
+        int y_dep_inp = y_dep_lbl;        // mesma linha
+        int y_msg     = y_dep_lbl + 2;    // mensagens logo abaixo
 
         // Juiz
         screenGotoxy(left, y_juiz);
@@ -463,7 +449,6 @@ static void jogar_nivel(const Nivel *n, int indice_nivel, int *pontuacao) {
         screenGotoxy(left, y_provas_lbl);
         printf("Use as Provas para seu depoimento:");
 
-        // Monta linha centralizada com as provas
         char linha_provas[256];
         linha_provas[0] = '\0';
         if (n->num_itens > 0) {
@@ -506,19 +491,16 @@ static void jogar_nivel(const Nivel *n, int indice_nivel, int *pontuacao) {
             printf("+------------------------------------------------------+");
         }
 
-        // Depoimento (entrada do jogador) mais ao fundo
+        // Depoimento na mesma linha
         screenGotoxy(left, y_dep_lbl);
-        printf("Depoimento:");
+        printf("Depoimento: ");
+        int x_input = left + (int)strlen("Depoimento: ");
 
-        screenGotoxy(left, y_dep_inp);
-        printf("> ");
-        int x_input = left + 2;
-
-        // Barra de comandos fixa no rodapé
-        int y_cmd = MAXY - 3;
-        draw_horizontal_bar(y_cmd, width);
-        screenGotoxy(left, y_cmd + 1);
-        printf("COMANDOS   ENTER: Validar   ESC: Sair  >>>>>>>>>>>>>>>>>>>>>");
+        // Barra de comandos fixa no rodapé com --- em cima e embaixo
+        draw_horizontal_bar(y_cmd_top, width);
+        screenGotoxy(left, y_cmd_text);
+        printf("COMANDOS | ENTER: Validar | ESC: Sair");
+        draw_horizontal_bar(y_cmd_bottom, width);
 
         screenUpdate();
 
@@ -556,19 +538,16 @@ static void jogar_nivel(const Nivel *n, int indice_nivel, int *pontuacao) {
             if (pontuacao) *pontuacao += ganho;
 
             screenSetColor(LIGHTGREEN, BLACK);
-            printf("Depoimento aceito! (Tautologia)");
+            printf("Depoimento aceito!");
             screenSetColor(WHITE, BLACK);
 
             screenGotoxy(left, y_msg + 1);
             printf("Você ganhou %d pontos neste nível.", ganho);
 
-            screenGotoxy(left, y_msg + 3);
-            printf("Exemplo de tautologia-alvo deste nível:");
-            screenGotoxy(left, y_msg + 4);
-            printf("F_objetivo(p,q,r) = %s", n->formula);
+            // Mensagem centralizada ENTRE a barra de comandos e a borda inferior
+            draw_centered(y_cmd_bottom + 1,
+                          "Pressione ENTER para seguir para o próximo nível...");
 
-            screenGotoxy(left, y_msg + 6);
-            printf("Pressione ENTER para seguir para o próximo nível...");
             screenUpdate();
             esperar_enter();
             acertou_tautologia = 1;
