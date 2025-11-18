@@ -257,37 +257,25 @@ static void normalizar_formula(const char *src, char *dst, size_t tam) {
 }
 
 // ---------------------------------------------------------
-// Encerrar jogo via ESC / leitura básica
+// Entrada de teclado: ENTER / ESC e leitura de linha
 // ---------------------------------------------------------
 
-static void encerrar_por_esc(void) {
-    screenInit(1);
-    screenSetColor(LIGHTRED, BLACK);
-    draw_centered(SCRSTARTY + 8, "Jogo encerrado pelo jogador (ESC).");
-    screenSetColor(WHITE, BLACK);
-    draw_centered(SCRSTARTY + 10, "Pressione ENTER para fechar...");
-    screenUpdate();
-
-    int c;
-    do {
-        c = readch();
-    } while (c != '\n' && c != '\r');
-
-    exit(0);
-}
-
-static void esperar_enter() {
+// 0 = ENTER, 1 = ESC
+static int esperar_enter_or_esc(void) {
     int ch;
-    do {
+    for (;;) {
         ch = readch();
         if (ch == 27) { // ESC
-            encerrar_por_esc();
+            return 1;
         }
-    } while (ch != '\n' && ch != '\r');
+        if (ch == '\n' || ch == '\r') {
+            return 0;
+        }
+    }
 }
 
-// lê linha genérica (usado para fórmulas e nome do réu)
-static void ler_linha(char *buf, size_t tam, int x, int y) {
+// 0 = OK, 1 = ESC
+static int ler_linha(char *buf, size_t tam, int x, int y) {
     size_t len = 0;
     buf[0] = '\0';
     screenGotoxy(x, y);
@@ -299,7 +287,8 @@ static void ler_linha(char *buf, size_t tam, int x, int y) {
         if (ch == 27) { // ESC
             screenHideCursor();
             screenUpdate();
-            encerrar_por_esc();
+            buf[0] = '\0';
+            return 1;
         } else if (ch == '\n' || ch == '\r') {
             buf[len] = '\0';
             break;
@@ -323,11 +312,12 @@ static void ler_linha(char *buf, size_t tam, int x, int y) {
 
     screenHideCursor();
     screenUpdate();
+    return 0;
 }
 
-// Wrapper antigo para fórmulas
-static void ler_formula(char *expr, size_t tam, int x, int y) {
-    ler_linha(expr, tam, x, y);
+// 0 = OK, 1 = ESC
+static int ler_formula(char *expr, size_t tam, int x, int y) {
+    return ler_linha(expr, tam, x, y);
 }
 
 // ---------------------------------------------------------
@@ -454,9 +444,9 @@ static void mostrar_rank(void) {
         }
     }
 
-    draw_centered(SCRSTARTY + 17, "Pressione ENTER para voltar ao menu...");
+    draw_centered(SCRSTARTY + 17, "Pressione ENTER ou ESC para voltar ao menu...");
     screenUpdate();
-    esperar_enter();
+    (void)esperar_enter_or_esc();
 }
 
 // ---------------------------------------------------------
@@ -488,7 +478,7 @@ static void anim_transicao(int proximo_numero_nivel) {
     }
 }
 
-static void intro_animation() {
+static void intro_animation(void) {
     screenInit(1);
 
     // Título
@@ -514,11 +504,11 @@ static void intro_animation() {
 
     // Mensagem inferior
     screenSetColor(YELLOW, BLACK);
-    draw_centered(SCRSTARTY + 13, "Pressione ENTER para iniciar o julgamento...");
+    draw_centered(SCRSTARTY + 13, "Pressione ENTER ou ESC para ir ao menu...");
     screenSetColor(WHITE, BLACK);
 
     screenUpdate();
-    esperar_enter();
+    (void)esperar_enter_or_esc();
 }
 
 // ---------------------------------------------------------
@@ -529,30 +519,37 @@ static int menu_principal(void) {
     for (;;) {
         screenInit(1);
 
-        screenSetColor(LIGHTRED, BLACK);
-        draw_centered(SCRSTARTY + 2, "CORTE DA VERDADE");
+        int left = SCRSTARTX + 4;
+        int y = SCRSTARTY + 4;
+
         screenSetColor(WHITE, BLACK);
+        screenGotoxy(left, y++);
+        printf("##################################################");
+        screenGotoxy(left, y++);
+        printf("1. Iniciar Julgamento");
+        screenGotoxy(left, y++);
+        printf("2. Rank Top 10");
+        screenGotoxy(left, y++);
+        printf("3. Tutorial");
+        screenGotoxy(left, y++);
+        printf("4. Sair do jogo");
+        screenGotoxy(left, y++);
+        printf("##################################################");
 
-        draw_centered(SCRSTARTY + 5, "[1] Iniciar julgamento");
-        draw_centered(SCRSTARTY + 7, "[2] Rank (Leaderboard)");
-        draw_centered(SCRSTARTY + 9, "[3] Tutorial");
-        draw_centered(SCRSTARTY + 11, "[0] Sair");
-
-        draw_centered(SCRSTARTY + 14, "Pressione 1, 2, 3 ou 0 para escolher.");
+        draw_centered(SCRSTARTY + 14, "Escolha uma opção (1-4).");
         screenUpdate();
 
         int ch = readch();
-        if (ch == 27) {
-            encerrar_por_esc();
-        } else if (ch == '1') {
+        if (ch == '1') {
             return 1;
         } else if (ch == '2') {
             return 2;
         } else if (ch == '3') {
             return 3;
-        } else if (ch == '0') {
-            return 0;
+        } else if (ch == '4') {
+            return 4;
         }
+        // ESC ou outras teclas: reexibe menu
     }
 }
 
@@ -591,20 +588,21 @@ static void mostrar_tutorial(void) {
     screenGotoxy(x, y++);
     printf("- Não é permitido repetir a mesma expressão no mesmo nível.");
     screenGotoxy(x, y++);
-    printf("- ESC sempre encerra o jogo imediatamente.");
+    printf("- ESC durante o julgamento volta ao menu (com seus pontos).");
     screenGotoxy(x, y++);
     printf("- Ao final, sua pontuação pode entrar no Rank (Top 10).");
 
-    draw_centered(SCRSTARTY + 17, "Pressione ENTER para voltar ao menu...");
+    draw_centered(SCRSTARTY + 17, "Pressione ENTER ou ESC para voltar ao menu...");
     screenUpdate();
-    esperar_enter();
+    (void)esperar_enter_or_esc();
 }
 
 // ---------------------------------------------------------
 // Nome do réu
 // ---------------------------------------------------------
 
-static void pedir_nome_reu(char *nome, size_t tam) {
+// retorna 1 = ok, 0 = cancelado (ESC)
+static int pedir_nome_reu(char *nome, size_t tam) {
     screenInit(1);
 
     screenSetColor(LIGHTRED, BLACK);
@@ -616,19 +614,27 @@ static void pedir_nome_reu(char *nome, size_t tam) {
     printf("Nome do Réu: ");
     int x_input = SCRSTARTX + 4 + (int)strlen("Nome do Réu: ");
 
-    ler_linha(nome, tam, x_input, SCRSTARTY + 7);
+    if (ler_linha(nome, tam, x_input, SCRSTARTY + 7) != 0) {
+        // ESC: volta ao menu
+        nome[0] = '\0';
+        return 0;
+    }
 
     if (nome[0] == '\0') {
         strncpy(nome, "Anonimo", tam - 1);
         nome[tam - 1] = '\0';
     }
+
+    return 1;
 }
 
 // ---------------------------------------------------------
 // Jogabilidade de um nível (com checagem de fórmula-alvo)
 // ---------------------------------------------------------
+// retorna 0 = nível jogado normalmente
+//         1 = jogador apertou ESC (abortar partida)
 
-static void jogar_nivel(const Nivel *n, int indice_nivel, int *pontuacao) {
+static int jogar_nivel(const Nivel *n, int indice_nivel, int *pontuacao) {
     char expr[512];
     int acertou_tautologia = 0;
     int dica_mostrada = 0;
@@ -636,7 +642,7 @@ static void jogar_nivel(const Nivel *n, int indice_nivel, int *pontuacao) {
     memset(&ultima_tab, 0, sizeof(ultima_tab));
     ResultadoFormula ultimo_res = RESULT_CONTINGENCIA;
 
-    (void)indice_nivel; // não usado diretamente por enquanto
+    (void)indice_nivel; // não usado diretamente
 
     char alvo_norm[512];
     normalizar_formula(n->formula, alvo_norm, sizeof(alvo_norm));
@@ -744,12 +750,15 @@ static void jogar_nivel(const Nivel *n, int indice_nivel, int *pontuacao) {
         // Comandos
         draw_horizontal_bar(y_cmd_top, width);
         screenGotoxy(left, y_cmd_text);
-        printf("COMANDOS | ENTER: Validar | ESC: Sair");
+        printf("COMANDOS | ENTER: Validar | ESC: Voltar ao menu");
         draw_horizontal_bar(y_cmd_bottom, width);
 
         screenUpdate();
 
-        ler_formula(expr, sizeof(expr), x_input, y_dep_inp);
+        if (ler_formula(expr, sizeof(expr), x_input, y_dep_inp) != 0) {
+            // ESC durante digitação → aborta partida
+            return 1;
+        }
 
         // Normaliza expressão digitada
         char expr_norm[512];
@@ -771,7 +780,9 @@ static void jogar_nivel(const Nivel *n, int indice_nivel, int *pontuacao) {
             screenGotoxy(left, y_msg + 1);
             printf("Tente uma nova forma de defesa.");
             screenUpdate();
-            esperar_enter();
+            if (esperar_enter_or_esc() != 0) {
+                return 1;
+            }
             tentativa--; // não consome tentativa
             continue;
         }
@@ -791,7 +802,9 @@ static void jogar_nivel(const Nivel *n, int indice_nivel, int *pontuacao) {
             screenGotoxy(left, y_msg + 1);
             printf("Pressione ENTER e tente novamente (não contou tentativa)...");
             screenUpdate();
-            esperar_enter();
+            if (esperar_enter_or_esc() != 0) {
+                return 1;
+            }
             tentativa--; // não consome tentativa
             continue;
         }
@@ -822,10 +835,13 @@ static void jogar_nivel(const Nivel *n, int indice_nivel, int *pontuacao) {
 
             // Mensagem centralizada entre comandos e borda
             draw_centered(y_cmd_bottom + 1,
-                          "Pressione ENTER para seguir para o próximo nível...");
+                          "Pressione ENTER ou ESC para continuar...");
 
             screenUpdate();
-            esperar_enter();
+            if (esperar_enter_or_esc() != 0) {
+                // ESC aqui: encerra partida com pontuação atual
+                return 1;
+            }
             acertou_tautologia = 1;
             break;
         } else {
@@ -844,9 +860,11 @@ static void jogar_nivel(const Nivel *n, int indice_nivel, int *pontuacao) {
             }
 
             screenGotoxy(left, y_msg + 3);
-            printf("Pressione ENTER para continuar...");
+            printf("Pressione ENTER ou ESC para continuar...");
             screenUpdate();
-            esperar_enter();
+            if (esperar_enter_or_esc() != 0) {
+                return 1;
+            }
         }
     }
 
@@ -896,21 +914,30 @@ static void jogar_nivel(const Nivel *n, int indice_nivel, int *pontuacao) {
         printf("F_objetivo(p,q,r) = %s", n->formula);
 
         screenGotoxy(SCRSTARTX + 3, linha + 7);
-        printf("Pressione ENTER para seguir para o próximo nível...");
+        printf("Pressione ENTER ou ESC para continuar...");
         screenUpdate();
-        esperar_enter();
+        if (esperar_enter_or_esc() != 0) {
+            return 1;
+        }
     }
+
+    return 0;
 }
 
 // ---------------------------------------------------------
 // Execução de uma partida completa
 // ---------------------------------------------------------
+// retorna a pontuação acumulada (mesmo se ESC no meio)
 
 static int executar_partida(const char *nome_reu) {
     int pontuacao = 0;
 
     for (int i = 0; i < NUM_NIVEIS; i++) {
-        jogar_nivel(&NIVEIS[i], i, &pontuacao);
+        int abortado = jogar_nivel(&NIVEIS[i], i, &pontuacao);
+        if (abortado) {
+            // ESC durante o julgamento → parar aqui com pontuação atual
+            break;
+        }
 
         if (i < NUM_NIVEIS - 1) {
             int proximo_numero = i + 2;
@@ -918,6 +945,7 @@ static int executar_partida(const char *nome_reu) {
         }
     }
 
+    // Tela final da partida (mesmo se parou antes do nível 15)
     screenInit(1);
     screenSetColor(LIGHTRED, BLACK);
     draw_centered(SCRSTARTY + 3, "FIM DO JULGAMENTO");
@@ -945,10 +973,10 @@ static int executar_partida(const char *nome_reu) {
     }
 
     draw_centered(SCRSTARTY + 9, classif);
-    draw_centered(SCRSTARTY + 12, "Pressione ENTER para voltar ao menu...");
+    draw_centered(SCRSTARTY + 12, "Pressione ENTER ou ESC para voltar ao menu...");
 
     screenUpdate();
-    esperar_enter();
+    (void)esperar_enter_or_esc();
 
     return pontuacao;
 }
@@ -964,11 +992,14 @@ void jogo_corte_da_verdade(void) {
 
     for (;;) {
         int opcao = menu_principal();
-        if (opcao == 0) {
+        if (opcao == 4) { // Sair do jogo
             break;
         } else if (opcao == 1) {
             char nome_reu[NOME_MAX];
-            pedir_nome_reu(nome_reu, sizeof(nome_reu));
+            if (!pedir_nome_reu(nome_reu, sizeof(nome_reu))) {
+                // ESC no nome → volta ao menu
+                continue;
+            }
             int pontos = executar_partida(nome_reu);
             atualizar_rank(nome_reu, pontos);
             salvar_rank();
@@ -982,7 +1013,7 @@ void jogo_corte_da_verdade(void) {
     screenInit(1);
     screenSetColor(WHITE, BLACK);
     draw_centered(SCRSTARTY + 8, "Obrigado por jogar a CORTE DA VERDADE!");
-    draw_centered(SCRSTARTY + 10, "Pressione ENTER para sair...");
+    draw_centered(SCRSTARTY + 10, "Pressione ENTER ou ESC para sair...");
     screenUpdate();
-    esperar_enter();
+    (void)esperar_enter_or_esc();
 }
