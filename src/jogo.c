@@ -24,18 +24,18 @@ static RankEntry g_rank[MAX_RANK];
 static int g_rank_count = 0;
 
 // ---------------------------------------------------------
-// Definição dos 15 níveis
+// Definição dos níveis (9 níveis principais: 3 F, 3 M, 3 D)
 // ---------------------------------------------------------
 
-const int NUM_NIVEIS = 15;
+const int NUM_NIVEIS = 9;
 
-const Nivel NIVEIS[15] = {
+const Nivel NIVEIS[9] = {
     // --- F: 1 variável (FÁCIL) ---
     {
         "F1",
         "p v ~p",
         "p: O réu é culpado.",
-        "O réu é culpado OU NÃO é culpado.",
+        "O réu é culpado ou não é culpado.",
         RESULT_TAUTOLOGIA,
         { "p", "v", "~", "p", "p", "v", "~", "p" },
         8
@@ -44,7 +44,7 @@ const Nivel NIVEIS[15] = {
         "F2",
         "~(p ^ ~p)",
         "p: A moção é válida.",
-        "NÃO é verdade que a moção é válida E NÃO é válida.",
+        "Não é verdade que a moção é válida e não é válida.",
         RESULT_TAUTOLOGIA,
         { "p", "^", "~", "p", "~", "p", "^", "p" },
         8
@@ -53,27 +53,9 @@ const Nivel NIVEIS[15] = {
         "F3",
         "p -> p",
         "p: A evidência é admitida.",
-        "SE a evidência é admitida, ENTÃO a evidência é admitida.",
+        "Se a evidência é admitida, então a evidência é admitida.",
         RESULT_TAUTOLOGIA,
         { "p", "->", "p", "p", "->", "p", "p", "->" },
-        8
-    },
-    {
-        "F4",
-        "p <-> p",
-        "p: O veredito é definitivo.",
-        "O veredito é definitivo SE, E SOMENTE SE, o veredito é definitivo.",
-        RESULT_TAUTOLOGIA,
-        { "p", "<->", "p", "p", "<->", "p", "p", "<->" },
-        8
-    },
-    {
-        "F5",
-        "~~p -> p",
-        "p: A audiência será marcada.",
-        "SE NÃO é verdade que a audiência NÃO será marcada, ENTÃO a audiência será marcada.",
-        RESULT_TAUTOLOGIA,
-        { "~", "~", "p", "->", "p", "~", "p", "->" },
         8
     },
 
@@ -82,7 +64,7 @@ const Nivel NIVEIS[15] = {
         "M1",
         "p -> (p v q)",
         "p: A corte está em sessão. q: O caso foi arquivado.",
-        "SE a corte está em sessão, ENTÃO a corte está em sessão OU o caso foi arquivado.",
+        "Se a corte está em sessão, então a corte está em sessão ou o caso foi arquivado.",
         RESULT_TAUTOLOGIA,
         { "p", "->", "p", "v", "q", "p", "v", "q" },
         8
@@ -91,7 +73,8 @@ const Nivel NIVEIS[15] = {
         "M2",
         "(p ^ q) -> p",
         "p: O promotor provou o crime. q: O juiz aceitou a prova.",
-        "SE o promotor provou o crime E o juiz aceitou a prova, ENTÃO o promotor provou o crime.",
+        "Se o promotor provou o crime e o juiz aceitou a prova,"
+        "então o promotor provou o crime.",
         RESULT_TAUTOLOGIA,
         { "p", "^", "q", "->", "p", "p", "^", "q" },
         8
@@ -100,30 +83,11 @@ const Nivel NIVEIS[15] = {
         "M3",
         "[p ^ (p -> q)] -> q",
         "p: A lei é constitucional. q: O réu será condenado.",
-        "SE a lei é constitucional E (SE a lei é constitucional, ENTÃO o réu será condenado), "
-        "ENTÃO o réu será condenado. (Modus Ponens)",
+        "Se a lei é constitucional e (se a lei é constitucional"
+        ",então o réu será condenado),"
+        "então o réu será condenado.",
         RESULT_TAUTOLOGIA,
         { "p", "^", "p", "->", "q", "->", "q", "p" },
-        8
-    },
-    {
-        "M4",
-        "~(p -> q) <-> (p ^ ~q)",
-        "p: O oficial testemunhou. q: O réu será solto.",
-        "NÃO (SE o oficial testemunhou, ENTÃO o réu será solto) SE, E SOMENTE SE, "
-        "o oficial testemunhou E NÃO o réu será solto.",
-        RESULT_TAUTOLOGIA,
-        { "~", "p", "->", "q", "<->", "p", "^", "~" },
-        8
-    },
-    {
-        "M5",
-        "[(p v q) ^ ~p] -> q",
-        "p: O crime foi premeditado. q: A fiança será negada.",
-        "SE o crime foi premeditado OU a fiança será negada, E NÃO o crime foi premeditado, "
-        "ENTÃO a fiança será negada. (Silogismo Disjuntivo)",
-        RESULT_TAUTOLOGIA,
-        { "p", "v", "q", "^", "~", "p", "->", "q" },
         8
     },
 
@@ -131,11 +95,10 @@ const Nivel NIVEIS[15] = {
     {
         "D1",
         "[(p -> q) ^ (q -> r)] -> (p -> r)",
-        "p: O depoimento é aceito. q: O júri ouve a prova. r: A decisão é justa.",
-        "SE (SE o depoimento é aceito, ENTÃO o júri ouve a prova) E "
-        "(SE o júri ouve a prova, ENTÃO a decisão é justa), "
-        "ENTÃO (SE o depoimento é aceito, ENTÃO a decisão é justa). "
-        "(Silogismo Hipotético)",
+        "p: O depoimento e aceito. q: O juri ouve a prova. r: A decisao e justa.",
+        "Se (se o depoimento é aceito, então o juri ouve a prova) "
+        "e (se o juri ouve a prova, então a decisão é justa), "
+        "então (se o depoimento é aceito, então a decisao é justa). ",
         RESULT_TAUTOLOGIA,
         { "p", "->", "q", "^", "q", "->", "r", "p" },
         8
@@ -143,9 +106,9 @@ const Nivel NIVEIS[15] = {
     {
         "D2",
         "[p -> (q ^ r)] -> (p -> q)",
-        "p: O crime foi grave. q: A pena é máxima. r: Não há recurso.",
-        "SE (SE o crime foi grave, ENTÃO a pena é máxima E NÃO há recurso), "
-        "ENTÃO (SE o crime foi grave, ENTÃO a pena é máxima).",
+        "p: O crime foi grave. q: A pena e maxima. r: Nao ha recurso.",
+        "Se (se o crime foi grave, então a pena é máxima e não há recurso), "
+        "então (se o crime foi grave, então a pena é máxima).",
         RESULT_TAUTOLOGIA,
         { "p", "->", "q", "^", "r", "->", "p", "->" },
         8
@@ -153,35 +116,49 @@ const Nivel NIVEIS[15] = {
     {
         "D3",
         "[p -> (q v r)] <-> [(p ^ ~q) -> r]",
-        "p: O juiz decide hoje. q: A defesa apela. r: O réu aguarda em liberdade.",
-        "(SE o juiz decide hoje, ENTÃO a defesa apela OU o réu aguarda em liberdade) "
-        "SE, E SOMENTE SE, (SE o juiz decide hoje E NÃO a defesa apela, "
-        "ENTÃO o réu aguarda em liberdade).",
+        "p: O juiz decide hoje. q: A defesa apela. r: O reu aguarda em liberdade.",
+        "(Se o juiz decide hoje, então a defesa apela ou o réu aguarda em liberdade) "
+        "se, e somente se, (se o juiz decide hoje e não a defesa apela, "
+        "então o réu aguarda em liberdade).",
         RESULT_TAUTOLOGIA,
         { "p", "->", "q", "v", "r", "<->", "p", "^" },
         8
+    }
+};
+
+// ---------------------------------------------------------
+// Fases bônus (uma após cada bloco de dificuldade)
+// ---------------------------------------------------------
+
+typedef enum {
+    ARG_SOFISMA,
+    ARG_SILOGISMO
+} TipoArgumento;
+
+typedef struct {
+    const char *titulo;
+    const char *texto;
+    TipoArgumento tipo;
+} FaseBonus;
+
+static const FaseBonus FASES_BONUS[3] = {
+    {
+        "Bônus 1 - Fase Fácil",
+        "Se alguns réus que confessam são culpados, então todo réu que confessa é culpado. "
+        "Logo, basta confessar para ser culpado.",
+        ARG_SOFISMA
     },
     {
-        "D4",
-        "[(p v q) -> r] <-> [(p -> r) ^ (q -> r)]",
-        "p: A prova A é conclusiva. q: A prova B é conclusiva. r: O réu será absolvido.",
-        "(SE a prova A é conclusiva OU a prova B é conclusiva, ENTÃO o réu será absolvido) "
-        "SE, E SOMENTE SE, (SE a prova A é conclusiva, ENTÃO o réu será absolvido "
-        "E SE a prova B é conclusiva, ENTÃO o réu será absolvido). (Lei da Distribuição)",
-        RESULT_TAUTOLOGIA,
-        { "p", "v", "q", "->", "r", "<->", "p", "->" },
-        8
+        "Bônus 2 - Fase Média",
+        "Todo crime premeditado deve ser julgado com mais rigor. "
+        "Este crime foi premeditado. Logo, este crime deve ser julgado com mais rigor.",
+        ARG_SILOGISMO
     },
     {
-        "D5",
-        "[(p ^ q) -> r] <-> [p -> (q -> r)]",
-        "p: O ato foi doloso. q: O dano foi causado. r: Haverá indenização.",
-        "(SE o ato foi doloso E o dano foi causado, ENTÃO haverá indenização) SE, E SOMENTE SE, "
-        "(SE o ato foi doloso, ENTÃO (SE o dano foi causado, ENTÃO haverá indenização)). "
-        "(Lei da Exportação)",
-        RESULT_TAUTOLOGIA,
-        { "p", "^", "q", "->", "r", "<->", "p", "->" },
-        8
+        "Bônus 3 - Fase Difícil",
+        "Todo laudo falsificado e invalido. Este laudo foi falsificado. "
+        "Logo, este laudo e invalido.",
+        ARG_SILOGISMO
     }
 };
 
@@ -223,15 +200,6 @@ static void draw_wrapped_text(int x, int y, int width, const char *text) {
         }
         putchar(c);
         col++;
-    }
-}
-
-static const char *texto_resultado(ResultadoFormula r) {
-    switch (r) {
-        case RESULT_TAUTOLOGIA:   return "Tautologia (sempre verdadeira)";
-        case RESULT_CONTRADICAO:  return "Contradição (sempre falsa)";
-        case RESULT_CONTINGENCIA: return "Contingência (às vezes verdadeira, às vezes falsa)";
-        default:                  return "Desconhecido";
     }
 }
 
@@ -326,7 +294,7 @@ static int ler_formula(char *expr, size_t tam, int x, int y) {
 
 static int variaveis_validas(const Nivel *n, const char *expr, char *msg, size_t tam_msg) {
     char tipo = n->codigo[0]; // 'F', 'M' ou 'D'
-    int permite_q = (tipo != 'F');    // F: não
+    int permite_q = (tipo != 'F');    // F: só p
     int permite_r = (tipo == 'D');    // só D pode r
 
     for (int i = 0; expr[i] != '\0'; i++) {
@@ -568,7 +536,9 @@ static void mostrar_tutorial(void) {
     screenGotoxy(x, y++);
     printf("- Use as Provas (p, q, r e conectivos) para montar a DEFESA.");
     screenGotoxy(x, y++);
-    printf("- São 15 níveis (5 fáceis, 5 médios, 5 difíceis).");
+    printf("- São 9 níveis principais (3 fáceis, 3 médios, 3 difíceis).");
+    screenGotoxy(x, y++);
+    printf("- Ao final de cada bloco, há uma FASE BÔNUS de interpretação.");
     screenGotoxy(x, y++);
     printf("- Em cada nível existe uma fórmula-alvo específica.");
     screenGotoxy(x, y++);
@@ -588,11 +558,19 @@ static void mostrar_tutorial(void) {
     screenGotoxy(x, y++);
     printf("- Não é permitido repetir a mesma expressão no mesmo nível.");
     screenGotoxy(x, y++);
+    printf("- Nas fases bônus:");
+    screenGotoxy(x + 2, y++);
+    printf("* Sofisma/Silogismo correto: sua pontuação é dobrada.");
+    screenGotoxy(x + 2, y++);
+    printf("* Resposta errada: você perde metade dos pontos.");
+    screenGotoxy(x + 2, y++);
+    printf("* Permanecer calado: sua pontuação é mantida.");
+    screenGotoxy(x, y++);
     printf("- ESC durante o julgamento volta ao menu (com seus pontos).");
     screenGotoxy(x, y++);
     printf("- Ao final, sua pontuação pode entrar no Rank (Top 10).");
 
-    draw_centered(SCRSTARTY + 17, "Pressione ENTER ou ESC para voltar ao menu...");
+    draw_centered(SCRSTARTY + 19, "Pressione ENTER ou ESC para voltar ao menu...");
     screenUpdate();
     (void)esperar_enter_or_esc();
 }
@@ -629,7 +607,95 @@ static int pedir_nome_reu(char *nome, size_t tam) {
 }
 
 // ---------------------------------------------------------
-// Jogabilidade de um nível (com checagem de fórmula-alvo)
+// Fase Bônus
+// ---------------------------------------------------------
+// retorna 0 = ok, 1 = ESC (abortar partida)
+
+static int jogar_bonus(const FaseBonus *b, int *pontuacao) {
+    screenInit(1);
+
+    screenSetColor(LIGHTRED, BLACK);
+    draw_centered(SCRSTARTY + 2, "FASE BÔNUS - NOVAS EVIDÊNCIAS");
+    screenSetColor(WHITE, BLACK);
+
+    int x = SCRSTARTX + 4;
+    int y = SCRSTARTY + 4;
+
+    screenGotoxy(x, y++);
+    printf("%s", b->titulo);
+    y++;
+
+    screenGotoxy(x, y++);
+    printf("A acusação traz novas evidências:");
+    draw_wrapped_text(x, y, 70, b->texto);
+    y += 4;
+
+    screenGotoxy(x, y++);
+    printf("Como o Réu se posiciona?");
+    screenGotoxy(x, y++);
+    printf("1) Sofisma");
+    screenGotoxy(x, y++);
+    printf("2) Silogismo");
+    screenGotoxy(x, y++);
+    printf("3) Permanecer calado");
+
+    char buf[80];
+    snprintf(buf, sizeof(buf), "Pontuação atual: %d pontos.", *pontuacao);
+    draw_centered(SCRSTARTY + 16, buf);
+    draw_centered(SCRSTARTY + 18, "Escolha 1, 2 ou 3 (ESC volta ao menu).");
+
+    screenUpdate();
+
+    for (;;) {
+        int ch = readch();
+        if (ch == 27) {
+            // ESC aborta partida
+            return 1;
+        } else if (ch == '1' || ch == '2' || ch == '3') {
+            int escolha = ch - '0';
+            int antiga = *pontuacao;
+            const char *msg_res;
+
+            if (escolha == 3) {
+                msg_res = "Você permaneceu calado. Sua pontuação foi mantida.";
+            } else {
+                int correta =
+                    ((b->tipo == ARG_SOFISMA && escolha == 1) ||
+                     (b->tipo == ARG_SILOGISMO && escolha == 2));
+                if (correta) {
+                    *pontuacao *= 2;
+                    msg_res = "Interpretação correta! Sua pontuação foi dobrada.";
+                } else {
+                    *pontuacao /= 2;
+                    msg_res = "Interpretação equivocada. Você perdeu metade dos pontos.";
+                }
+            }
+
+            screenInit(1);
+            screenSetColor(LIGHTRED, BLACK);
+            draw_centered(SCRSTARTY + 3, "RESULTADO DA FASE BÔNUS");
+            screenSetColor(WHITE, BLACK);
+
+            char linha1[100];
+            snprintf(linha1, sizeof(linha1), "Pontuação anterior: %d", antiga);
+            draw_centered(SCRSTARTY + 6, linha1);
+
+            char linha2[100];
+            snprintf(linha2, sizeof(linha2), "Pontuação atual: %d", *pontuacao);
+            draw_centered(SCRSTARTY + 8, linha2);
+
+            draw_centered(SCRSTARTY + 11, msg_res);
+
+            draw_centered(SCRSTARTY + 15, "Pressione ENTER ou ESC para continuar...");
+            screenUpdate();
+            (void)esperar_enter_or_esc();
+            return 0;
+        }
+    }
+}
+
+// ---------------------------------------------------------
+// Jogabilidade de um nível
 // ---------------------------------------------------------
 // retorna 0 = nível jogado normalmente
 //         1 = jogador apertou ESC (abortar partida)
@@ -642,7 +708,7 @@ static int jogar_nivel(const Nivel *n, int indice_nivel, int *pontuacao) {
     memset(&ultima_tab, 0, sizeof(ultima_tab));
     ResultadoFormula ultimo_res = RESULT_CONTINGENCIA;
 
-    (void)indice_nivel; // não usado diretamente
+    (void)indice_nivel;
 
     char alvo_norm[512];
     normalizar_formula(n->formula, alvo_norm, sizeof(alvo_norm));
@@ -661,7 +727,7 @@ static int jogar_nivel(const Nivel *n, int indice_nivel, int *pontuacao) {
         draw_horizontal_bar(SCRSTARTY + 2, width);
         screenGotoxy(left, SCRSTARTY + 3);
 
-        // Cabeçalho: CORTE DA VERDADE | Nível | Tentativa | Pontos
+        // Cabeçalho
         screenSetColor(LIGHTRED, BLACK);
         printf("CORTE DA VERDADE ");
         screenSetColor(WHITE, BLACK);
@@ -671,11 +737,11 @@ static int jogar_nivel(const Nivel *n, int indice_nivel, int *pontuacao) {
 
         draw_horizontal_bar(SCRSTARTY + 4, width);
 
-        // Coordenadas
-        int y_juiz       = SCRSTARTY + 6;
-        int y_provas_lbl = y_juiz + 3;
+        // Coordenadas (subimos um pouco as Provas)
+        int y_juiz       = SCRSTARTY + 5;
+        int y_provas_lbl = y_juiz + 2;
         int y_provas_ln  = y_provas_lbl + 1;
-        int y_defesa     = y_provas_ln + 2;
+        int y_defesa     = y_provas_ln + 1;
 
         int y_cmd_top    = MAXY - 4;
         int y_cmd_text   = y_cmd_top + 1;
@@ -727,19 +793,13 @@ static int jogar_nivel(const Nivel *n, int indice_nivel, int *pontuacao) {
         printf("%s", linha_provas);
         screenSetColor(WHITE, BLACK);
 
-        // Defesa (dica)
+        // Defesa (dica) com quebra de linha (largura menor pra não estourar)
         if (dica_mostrada) {
             screenGotoxy(left, y_defesa);
             printf("Defesa:");
-
-            screenGotoxy(left + 9, y_defesa - 1);
-            printf("+------------------------------------------------------+");
-            screenGotoxy(left + 9, y_defesa);
             screenSetColor(YELLOW, BLACK);
-            printf(" %s", n->frase_tautologica);
+            draw_wrapped_text(left + 9, y_defesa, 60, n->frase_tautologica);
             screenSetColor(WHITE, BLACK);
-            screenGotoxy(left + 9, y_defesa + 1);
-            printf("+------------------------------------------------------+");
         }
 
         // Depoimento
@@ -817,7 +877,7 @@ static int jogar_nivel(const Nivel *n, int indice_nivel, int *pontuacao) {
 
         screenGotoxy(left, y_msg);
 
-        // REGRAS DE ACEITAÇÃO: precisa ser tautologia E bater com a fórmula-alvo
+        // Precisa ser tautologia E bater com a fórmula-alvo
         if (res == RESULT_TAUTOLOGIA && strcmp(expr_norm, alvo_norm) == 0) {
             int ganho = 0;
             if (tentativa == 1)      ganho = 50;
@@ -833,13 +893,11 @@ static int jogar_nivel(const Nivel *n, int indice_nivel, int *pontuacao) {
             screenGotoxy(left, y_msg + 1);
             printf("Você ganhou %d pontos neste nível.", ganho);
 
-            // Mensagem centralizada entre comandos e borda
             draw_centered(y_cmd_bottom + 1,
                           "Pressione ENTER ou ESC para continuar...");
 
             screenUpdate();
             if (esperar_enter_or_esc() != 0) {
-                // ESC aqui: encerra partida com pontuação atual
                 return 1;
             }
             acertou_tautologia = 1;
@@ -875,27 +933,35 @@ static int jogar_nivel(const Nivel *n, int indice_nivel, int *pontuacao) {
 
         screenInit(1);
 
+        // Título
         screenSetColor(LIGHTRED, BLACK);
         draw_centered(SCRSTARTY + 1, "PONTUAÇÃO EXTRA PELA ÚLTIMA FÓRMULA");
         screenSetColor(WHITE, BLACK);
 
-        screenGotoxy(SCRSTARTX + 3, SCRSTARTY + 3);
-        printf("Classificação da última fórmula: %s", texto_resultado(ultimo_res));
+        // Começa mais para cima para sobrar espaço embaixo
+        int y = SCRSTARTY + 3;
 
-        screenGotoxy(SCRSTARTX + 3, SCRSTARTY + 5);
+        // Texto de classificação
+        screenGotoxy(SCRSTARTX + 3, y++);
+        printf("Classificação da última fórmula.");
+        y++;
+
+        // Última fórmula digitada
+        screenGotoxy(SCRSTARTX + 3, y++);
         printf("Nível %s - Última fórmula digitada:", n->codigo);
-        draw_wrapped_text(SCRSTARTX + 3, SCRSTARTY + 6, 70, expr);
+        draw_wrapped_text(SCRSTARTX + 3, y, 70, expr);
+        y += 3;
 
-        screenGotoxy(SCRSTARTX + 3, SCRSTARTY + 9);
+        // Tabela-verdade (mais para cima)
+        screenGotoxy(SCRSTARTX + 3, y++);
         printf("Tabela-verdade da sua fórmula:");
-        screenGotoxy(SCRSTARTX + 3, SCRSTARTY + 10);
+        screenGotoxy(SCRSTARTX + 3, y++);
         printf("p q r | F");
-        screenGotoxy(SCRSTARTX + 3, SCRSTARTY + 11);
+        screenGotoxy(SCRSTARTX + 3, y++);
         printf("-------------");
 
-        int linha = SCRSTARTY + 12;
         for (int i = 0; i < ultima_tab.n_linhas; i++) {
-            screenGotoxy(SCRSTARTX + 3, linha++);
+            screenGotoxy(SCRSTARTX + 3, y++);
             printf("%d %d %d | %d",
                    ultima_tab.valores_p[i],
                    ultima_tab.valores_q[i],
@@ -903,23 +969,28 @@ static int jogar_nivel(const Nivel *n, int indice_nivel, int *pontuacao) {
                    ultima_tab.resultado[i]);
         }
 
-        screenGotoxy(SCRSTARTX + 3, linha + 1);
-        printf("Linhas com F = Verdadeiro: %d", linhas_V);
-        screenGotoxy(SCRSTARTX + 3, linha + 2);
+        // Uma linha em branco
+        y += 1;
+
+        // Resumo da pontuação extra
+        screenGotoxy(SCRSTARTX + 3, y++);
+        printf("Linhas com V: %d", linhas_V);
+        screenGotoxy(SCRSTARTX + 3, y++);
         printf("Pontos extras ganhos neste nível: %d", linhas_V);
+        screenGotoxy(SCRSTARTX + 3, y++);
+        printf("Fórmula-alvo deste nível: %s", n->formula);
 
-        screenGotoxy(SCRSTARTX + 3, linha + 4);
-        printf("Fórmula-alvo deste nível:");
-        screenGotoxy(SCRSTARTX + 3, linha + 5);
-        printf("F_objetivo(p,q,r) = %s", n->formula);
+        // Mensagem de continuar: ancorada perto do rodapé
+        int y_press = MAXY - 2;
+        draw_centered(y_press, "Pressione ENTER ou ESC para continuar...");
 
-        screenGotoxy(SCRSTARTX + 3, linha + 7);
-        printf("Pressione ENTER ou ESC para continuar...");
         screenUpdate();
         if (esperar_enter_or_esc() != 0) {
             return 1;
         }
     }
+
+    (void)ultimo_res; // mantido caso queira usar depois
 
     return 0;
 }
@@ -935,8 +1006,16 @@ static int executar_partida(const char *nome_reu) {
     for (int i = 0; i < NUM_NIVEIS; i++) {
         int abortado = jogar_nivel(&NIVEIS[i], i, &pontuacao);
         if (abortado) {
-            // ESC durante o julgamento → parar aqui com pontuação atual
-            break;
+            break; // ESC durante o julgamento
+        }
+
+        // Fase bônus após cada bloco
+        if (i == 2 || i == 5 || i == 8) {
+            int idx_bonus = (i == 2) ? 0 : (i == 5 ? 1 : 2);
+            int abortado_bonus = jogar_bonus(&FASES_BONUS[idx_bonus], &pontuacao);
+            if (abortado_bonus) {
+                break;
+            }
         }
 
         if (i < NUM_NIVEIS - 1) {
@@ -945,7 +1024,7 @@ static int executar_partida(const char *nome_reu) {
         }
     }
 
-    // Tela final da partida (mesmo se parou antes do nível 15)
+    // Tela final da partida
     screenInit(1);
     screenSetColor(LIGHTRED, BLACK);
     draw_centered(SCRSTARTY + 3, "FIM DO JULGAMENTO");
@@ -959,7 +1038,7 @@ static int executar_partida(const char *nome_reu) {
     snprintf(buf, sizeof(buf), "Pontuação final acumulada: %d pontos.", pontuacao);
     draw_centered(SCRSTARTY + 7, buf);
 
-    int max_base = NUM_NIVEIS * 50; // 50 pontos por nível (sem extras)
+    int max_base = NUM_NIVEIS * 50; // sem contar bônus / extras
     int faixa_alto = max_base * 80 / 100;
     int faixa_medio = max_base * 50 / 100;
 
@@ -997,8 +1076,7 @@ void jogo_corte_da_verdade(void) {
         } else if (opcao == 1) {
             char nome_reu[NOME_MAX];
             if (!pedir_nome_reu(nome_reu, sizeof(nome_reu))) {
-                // ESC no nome → volta ao menu
-                continue;
+                continue; // ESC no nome
             }
             int pontos = executar_partida(nome_reu);
             atualizar_rank(nome_reu, pontos);
