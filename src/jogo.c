@@ -939,12 +939,12 @@ static int jogar_nivel(const Nivel *n, int indice_nivel, int *pontuacao) {
         screenSetColor(WHITE, BLACK);
 
         // Começa mais para cima para sobrar espaço embaixo
-        int y = SCRSTARTY + 3;
+        int y = SCRSTARTY + 2;
 
         // Texto de classificação
         screenGotoxy(SCRSTARTX + 3, y++);
         printf("Classificação da última fórmula.");
-        y++;
+        
 
         // Última fórmula digitada
         screenGotoxy(SCRSTARTX + 3, y++);
@@ -981,7 +981,7 @@ static int jogar_nivel(const Nivel *n, int indice_nivel, int *pontuacao) {
         printf("Fórmula-alvo deste nível: %s", n->formula);
 
         // Mensagem de continuar: ancorada perto do rodapé
-        int y_press = MAXY - 2;
+        int y_press = SCRENDY;
         draw_centered(y_press, "Pressione ENTER ou ESC para continuar...");
 
         screenUpdate();
