@@ -66,7 +66,7 @@ Em cada nível:
 | Avançado | até 3 (p, q, r) | 8 | (p^ (q v r)) → p |
 
 ## 🔁 Estrutura de uma Rodada
-O jogo apresenta as peças disponíveis (variáveis, conectores e parênteses).
+O jogo apresenta as peças disponíveis (variáveis, conectores e símbolos de agrupamento).
 
 **Exemplo**: p, p, v, ~. Com esse pacote, é possível montar a tautologia p v ~ p.
 
