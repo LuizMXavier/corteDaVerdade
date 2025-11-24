@@ -113,10 +113,13 @@ O jogo apresenta as peças disponíveis (variáveis, conectores e símbolos de a
 Ao fim da sessão:
 
 * Sua pontuação total é calculada.
+  
 ![Captura de tela da tela principal do jogo](images/tela_final.png)
+
 ---
 
 * Você pode entrar no **Ranking (Top 10)**.
+  
 ![Captura de tela da tela principal do jogo](images/tela_rank.png)
 
 ---
