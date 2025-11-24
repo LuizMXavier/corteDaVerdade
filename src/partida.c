@@ -76,6 +76,35 @@ static void normalizar_formula(const char *src, char *dst, size_t tam) {
 // ---------------------------------------------------------
 // Entrada de teclado: leitura de linha / fórmula
 // ---------------------------------------------------------
+// Lê uma tecla, filtrando sequências de setas (ESC + ...).
+// Retorna:
+//   0   -> tecla especial ignorada (setas/F-keys)
+//   27  -> ESC "real"
+//   outro valor -> caractere normal (ENTER, letras, números etc.)
+static int ler_tecla_filtrando_setas(void) {
+    int ch = readch();
+
+    if (ch != 27) {
+        return ch;
+    }
+
+    // Pode ser ESC sozinho ou início de sequência (setas).
+    // Espera um pouquinho para ver se chegam mais bytes.
+    usleep(20000); // 20 ms
+
+    if (!keyhit()) {
+        // Nada mais no buffer -> ESC sozinho.
+        return 27;
+    }
+
+    // Tem mais coisa depois do ESC: consome tudo (sequência de seta, F1 etc.)
+    while (keyhit()) {
+        (void)readch();
+    }
+
+    // Ignora a tecla especial
+    return 0;
+}
 
 // 0 = OK, 1 = ESC
 static int ler_linha(char *buf, size_t tam, int x, int y) {
@@ -86,8 +115,16 @@ static int ler_linha(char *buf, size_t tam, int x, int y) {
     screenUpdate();
 
     for (;;) {
-        int ch = readch();
-        if (ch == 27) { // ESC
+        int ch = ler_tecla_filtrando_setas();
+
+        if (ch == 0) {
+            // seta ou tecla especial: ignora
+            continue;
+        }
+
+        if (ch == 27) { // ESC "real"
+    
+
             screenHideCursor();
             screenUpdate();
             buf[0] = '\0';
@@ -252,7 +289,13 @@ static int jogar_bonus(const FaseBonus *b, int *pontuacao) {
     screenUpdate();
 
     for (;;) {
-        int ch = readch();
+        int ch = ler_tecla_filtrando_setas();
+
+        if (ch == 0) {
+            // seta / tecla especial: só ignora
+            continue;
+        }
+
         if (ch == 27) {
             // ESC aborta partida
             return 1;

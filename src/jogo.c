@@ -196,10 +196,36 @@ void jogo_corte_da_verdade(void) {
     screenUpdate();
     (void)esperar_enter_or_esc();
 }
+// Lê tecla para telas de confirmação, filtrando setas.
+static int ler_tecla_filtrando_setas_menu(void) {
+    int ch = readch();
+
+    if (ch != 27) {
+        return ch;
+    }
+
+    usleep(20000);
+    if (!keyhit()) {
+        // ESC sozinho
+        return 27;
+    }
+
+    // Sequência de seta / tecla especial: consome e ignora
+    while (keyhit()) {
+        (void)readch();
+    }
+    return 0;
+}
+
 // 0 = ENTER, 1 = ESC
 int esperar_enter_or_esc(void) {
     for (;;) {
-        int ch = readch();   // função da cli-lib (keyboard.h)
+        int ch = ler_tecla_filtrando_setas_menu();
+
+        if (ch == 0) {
+            // seta / tecla especial: ignora
+            continue;
+        }
 
         if (ch == 27) {      // ESC
             return 1;
@@ -209,6 +235,7 @@ int esperar_enter_or_esc(void) {
             return 0;
         }
 
-        // Qualquer outra tecla é ignorada
+        // Outras teclas: ignora
     }
 }
+
