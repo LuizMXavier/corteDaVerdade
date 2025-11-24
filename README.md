@@ -76,6 +76,7 @@ O jogo apresenta as peças disponíveis (variáveis, conectores e símbolos de a
 1.  O jogador faz a 1ª tentativa:
     * Acertou. Pontuação máxima.
     * Errou. Recebe dica em linguagem natural.
+      
       ![Captura de tela da tela principal do jogo](images/tela_frase.png)
 ---
 
