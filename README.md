@@ -24,7 +24,7 @@ O jogador deve construir fórmulas de lógica proposicional utilizando:
 
 * **Variáveis**: p, q, r
 * **Conectores**: :v, ^, ~, →, ↔
-* **símbolos de agrupamento** (), []
+* **símbolos de agrupamento**: (), []
 
 Cada rodada apresenta peças limitadas, e o jogador deve usar a lógica para montar tautologias — fórmulas verdadeiras em todas as interpretações possíveis.
 
@@ -98,6 +98,7 @@ O jogo apresenta as peças disponíveis (variáveis, conectores e símbolos de a
 ### ❌ Se não acertar a fórmula-alvo
 * Cada linha V da tabela verdade da última expressão = **1 ponto extra**.
   
+![Captura de tela da tela principal do jogo](images/tela_tabela.png)
 
 ### ⭐ Fase Bônus
 * **Sofisma/Silogismo correto** sua pontuação é **dobrada**.
