@@ -88,6 +88,12 @@ O jogo apresenta as peças disponíveis (variáveis, conectores e símbolos de a
     * O jogo monta a tabela verdade da última fórmula construída.
     * Cada linha **VERDADEIRA** (V) da tabela verdade vale **1 ponto extra**.
 
+### ❌ Se não acertar a fórmula-alvo
+* Cada linha V da tabela verdade da última expressão = **1 ponto extra**.
+  
+![Captura de tela da tela principal do jogo](images/tela_tabela.png)
+
+
 ## 🏆 Sistema de Pontuação
 ### ✔️ Pontos por acerto
 | Tentativa | Pontos |
@@ -96,10 +102,6 @@ O jogo apresenta as peças disponíveis (variáveis, conectores e símbolos de a
 | 2ª tentativa | **30 pts** |
 | 3ª tentativa | **20 pts** |
 
-### ❌ Se não acertar a fórmula-alvo
-* Cada linha V da tabela verdade da última expressão = **1 ponto extra**.
-  
-![Captura de tela da tela principal do jogo](images/tela_tabela.png)
 
 ### ⭐ Fase Bônus
 * **Sofisma/Silogismo correto** sua pontuação é **dobrada**.
