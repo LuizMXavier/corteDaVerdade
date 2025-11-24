@@ -21,4 +21,11 @@ typedef struct {
 // Função principal do jogo
 void jogo_corte_da_verdade(void);
 
+// Função principal do jogo
+void jogo_corte_da_verdade(void);
+
+// Espera ENTER ou ESC (0 = ENTER, 1 = ESC)
+int esperar_enter_or_esc(void);
+
+
 #endif // JOGO_H
