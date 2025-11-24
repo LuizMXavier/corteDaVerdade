@@ -87,10 +87,7 @@ O jogo apresenta as peças disponíveis (variáveis, conectores e símbolos de a
 4.  Caso não acerte em nenhuma das três:
     * O jogo monta a tabela verdade da última fórmula construída.
     * Cada linha **VERDADEIRA** (V) da tabela verdade vale **1 ponto extra**.
-
-### ❌ Se não acertar a fórmula-alvo
-* Cada linha V da tabela verdade da última expressão = **1 ponto extra**.
-  
+ 
 ![Captura de tela da tela principal do jogo](images/tela_tabela.png)
 
 
