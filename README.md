@@ -1,88 +1,131 @@
-# 🏛️ Corte da Verdade: Um Jogo de Lógica Proposicional
+# 🏛️ Corte da Verdade
+## 🎮 Jogo Educativo de Lógica Proposicional
 
-## 📌 Descrição do Projeto
+[cite_start]O Corte da Verdade é um jogo interativo e educativo no qual o jogador assume o papel de um **réu** em um tribunal onde ninguém pode mentir[cite: 4]. [cite_start]Para vencer, você deve montar **tautologias** [cite: 5] [cite_start]usando variáveis e conectivos lógicos — e convencer o juiz de que seu argumento é irrefutável[cite: 17].
 
-**Corte da Verdade** é um jogo educativo e interativo baseado em **lógica proposicional**. O jogador assume o papel de um réu em um tribunal onde a regra fundamental é: **ninguém pode mentir**.
-
-O objetivo central do jogo é construir fórmulas lógicas que sejam **tautologias** (argumentos sempre verdadeiros) para provar a irrefutabilidade da sua defesa perante o juiz.
-
-O projeto visa combinar raciocínio lógico, narrativa temática e um sistema de pontuação para incentivar o aprendizado progressivo dos conceitos de lógica.
-
----
-
-## 🧠 Conceitos Fundamentais
-
-O jogador deve manipular os seguintes elementos para construir suas fórmulas:
-
-### 1. Variáveis Proposicionais (Afirmações do Caso)
-* **p:** “O réu é culpado.”
-* **q:** “A testemunha está dizendo a verdade.”
-* **r:** “A prova apresentada é válida.”
-
-### 2. Conectores Lógicos
-| Símbolo | Nome | Representação |
-| :---: | :--- | :--- |
-| **v** | OU | Disjunção |
-| **^** | E | Conjunção |
-| **~** | NÃO | Negação |
-| **->** | Implicação | Condicional |
-| **<->** | Bicondicional | Dupla Implicação |
-
-**Regra de Validade:** A fórmula só é aceita se for uma **tautologia** (Verdadeira em todas as linhas da Tabela Verdade).
+## 📌 Índice
+* Visão Geral
+* Tema e Narrativa
+* Objetivo do Jogador
+* Componentes do Jogo
+* Níveis de Dificuldade
+* Estrutura de uma Rodada
+* Sistema de Pontuação
+* Encerramento
+* Equipe
 
 ---
 
-## 🧩 Como Funciona Cada Rodada
+## 🧠 Visão Geral
+[cite_start]O jogador deve construir fórmulas de lógica proposicional utilizando[cite: 5]:
 
-O jogador recebe um conjunto limitado de peças lógicas (variáveis e conectores) e tem **3 tentativas** para criar uma tautologia.
+* [cite_start]**Variáveis**: p, q, r [cite: 5, 24]
+* [cite_start]**Conectores**: $\lor$, $\land$, $\sim$, $\to$, $\leftrightarrow$ [cite: 5, 25]
+* [cite_start]Parênteses [cite: 26]
 
-### Fluxo e Dicas
-1.  **Montagem:** O jogador constrói uma fórmula bem formada (Ex: `p v ~p`).
-2.  **1ª Tentativa:**
-    * **Acerto:** Pontuação máxima. Rodada encerrada.
-    * **Erro:** Recebe uma **dica em linguagem natural**.
-3.  **2ª Tentativa:**
-    * **Acerto:** Pontuação intermediária.
-    * **Erro:** Recebe uma **dica mais técnica** (sobre leis lógicas, como De Morgan, etc.).
-4.  **3ª Tentativa:** Último esforço para obter a tautologia.
+[cite_start]Cada rodada apresenta peças limitadas [cite: 19][cite_start], e o jogador deve usar a lógica para montar tautologias — fórmulas verdadeiras em todas as interpretações possíveis[cite: 5, 17].
 
----
+## 🎭 Tema e Narrativa
+[cite_start]O jogo se passa no tribunal fictício chamado Corte da Verdade[cite: 7].
 
-## 📈 Sistema de Pontuação
+[cite_start]**Variáveis narrativas (Exemplo de Afirmações)**[cite: 8]:
+* [cite_start]p: “O réu é culpado.” [cite: 9]
+* [cite_start]q: “A testemunha está dizendo a verdade.” [cite: 11]
+* [cite_start]r: “A prova apresentada é válida.” [cite: 12]
 
-### ✔️ Pontuação por Tautologias
-| Tentativa de Acerto | Pontuação |
+**Exemplos de fórmulas:**
+* [cite_start]$p \lor \sim p$ — O réu é culpado ou não é culpado[cite: 14].
+* [cite_start]$p \to q$ — Se o réu é culpado, então a testemunha está dizendo a verdade[cite: 16].
+
+[cite_start]O juiz só aceita argumentos que sejam tautologias[cite: 17].
+
+**Cada nível tem uma fórmula-alvo específica**.
+
+## 🎯 Objetivo do Jogador
+Você controla o **Réu**.
+Em cada nível:
+
+* [cite_start]Recebe um conjunto limitado de peças lógicas (variáveis e conectores)[cite: 19].
+* [cite_start]Deve montar uma fórmula bem formada (FBF)[cite: 20].
+* Tem **3 tentativas por nível** para acertar a tautologia-alvo.
+* **Não é permitido repetir a mesma expressão no mesmo nível**.
+* [cite_start]Mesmo que erre, sua última fórmula ainda gera pontos pela tabela verdade[cite: 22, 52].
+
+**O jogo contém:**
+* [cite_start]**3 níveis fáceis** (Nível 1 - Básico) [cite: 30]
+* [cite_start]**3 níveis médios** (Nível 2 - Intermediário) [cite: 34]
+* [cite_start]**3 níveis difíceis** (Nível 3 - Avançado) [cite: 37]
+* Total: **9 desafios principais**
+
+## 🧩 Componentes do Jogo
+### [cite_start]Variáveis Proposicionais [cite: 24]
+* p
+* q
+* r
+### [cite_start]Conectores Lógicos [cite: 25]
+* $\lor$ — ou
+* $\land$ — e
+* $\sim$ — não
+* $\to$ — se... então...
+* $\leftrightarrow$ — se e somente se
+### Outros Elementos
+* [cite_start]Parênteses [cite: 26]
+* [cite_start]Sistema de pontuação [cite: 27]
+* [cite_start]Dicas em linguagem natural [cite: 46]
+* [cite_start]Dicas técnicas [cite: 50]
+
+## 📊 Níveis de Dificuldade
+| Nível | Variáveis | Linhas da tabela verdade | Exemplo |
+| :---: | :-------: | :----------------------: | :------ |
+| Básico | até 1 (p) | [cite_start]2 [cite: 63] | [cite_start]$p \lor \sim p$ [cite: 32] |
+| Intermediário | até 2 (p, q) | [cite_start]4 [cite: 64] | [cite_start]$(p \land q) \to p$ [cite: 36] |
+| Avançado | até 3 (p, q, r) | [cite_start]8 [cite: 65] | [cite_start]$(p \land (q \lor r)) \to p$ [cite: 39] |
+
+## 🔁 Estrutura de uma Rodada
+[cite_start]O jogo apresenta as peças disponíveis (variáveis, conectores e parênteses)[cite: 41].
+
+[cite_start]Exemplo: p, p, $\lor$, $\sim$ $\to$ permite montar $p \lor \sim p$[cite: 42].
+
+1.  [cite_start]O jogador faz a 1ª tentativa[cite: 43]:
+    * [cite_start]Acertou $\to$ pontuação máxima[cite: 44, 55].
+    * [cite_start]Errou $\to$ recebe dica em linguagem natural[cite: 46].
+2.  [cite_start]2ª tentativa[cite: 48]:
+    * [cite_start]Acertou $\to$ pontuação intermediária[cite: 49, 56].
+3.  Se ainda errar:
+    * [cite_start]Recebe dica mais técnica sobre tautologias[cite: 50].
+4.  [cite_start]3ª tentativa[cite: 51]:
+    * [cite_start]Acertou $\to$ menor pontuação[cite: 57].
+5.  [cite_start]Caso não acerte em nenhuma das três[cite: 52]:
+    * [cite_start]O jogo monta a tabela verdade da última fórmula construída[cite: 53, 60].
+    * Cada linha **VERDADEIRA** (V) da tabela verdade vale **1 ponto extra**.
+
+## 🏆 Sistema de Pontuação
+### ✔️ Pontos por acerto
+| Tentativa | Pontos |
 | :---: | :---: |
-| 1ª tentativa | **50 pontos** |
-| 2ª tentativa | **30 pontos** |
-| 3ª tentativa | **20 pontos** |
+| 1ª tentativa | **50 pts** |
+| 2ª tentativa | **30 pts** |
+| 3ª tentativa | **20 pts** |
 
-### ✔️ Pontuação por Linhas Verdadeiras (Se falhar)
-Se a fórmula final não for uma tautologia, o jogador ganha **1 ponto por cada linha verdadeira (V)** na Tabela Verdade da última fórmula submetida.
+### ❌ Se não acertar a fórmula-alvo
+* Cada linha V da tabela verdade da última expressão = **1 ponto extra**.
 
-| Variáveis na Fórmula | Número de Linhas (Total) |
-| :---: | :---: |
-| 1 variável ($p$) | 2 linhas |
-| 2 variáveis ($p, q$) | 4 linhas |
-| 3 variáveis ($p, q, r$) | 8 linhas |
+### ⭐ Fase Bônus
+* **Sofisma/Silogismo correto** $\to$ sua pontuação é **dobrada**.
+* **Resposta errada** $\to$ você perde **metade dos pontos**.
 
----
+## 🔚 Encerramento
+Ao fim da sessão:
 
-## 🔥 Níveis de Dificuldade
+* [cite_start]Sua pontuação total é calculada[cite: 67].
+* Você pode entrar no **Ranking (Top 10)**.
 
-O nível de dificuldade é determinado pelo número de variáveis permitidas na construção da fórmula:
+**Atalhos:**
+* **ENTER / ESC** $\to$ voltar ao menu
+* **ESC** durante o julgamento $\to$ retorna ao menu **mantendo sua pontuação**
 
-| Nível | Variáveis Permitidas | Exemplo de Tautologia |
-| :---: | :---: | :--- |
-| **1 – Básico** | 1 variável | `p v ~p` |
-| **2 – Intermediário** | 2 variáveis | `(p ^ q) -> p` |
-| **3 – Avançado** | 3 variáveis | `(p ^ (q v r)) -> p` |
+[cite_start]Você pode jogar novamente para tentar superar seu próprio recorde de pontuação[cite: 69].
 
----
-
-## 🏁 Encerramento
-
-Após um conjunto de rodadas, a pontuação total da sessão é somada, permitindo ao jogador acompanhar seu desempenho lógico e tentar superar seus próprios recordes.
 ---
 
 ## 🧑‍🤝‍🧑 Equipe
