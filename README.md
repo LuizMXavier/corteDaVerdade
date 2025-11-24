@@ -75,11 +75,9 @@ O jogo apresenta as peças disponíveis (variáveis, conectores e símbolos de a
     * Errou. Recebe dica em linguagem natural.
 2.  2ª tentativa:
     * Acertou. Pontuação intermediária.
-3.  Se ainda errar:
-    * Recebe dica mais técnica sobre tautologias.
-4.  3ª tentativa:
+3.  3ª tentativa:
     * Acertou. Menor pontuação.
-5.  Caso não acerte em nenhuma das três:
+4.  Caso não acerte em nenhuma das três:
     * O jogo monta a tabela verdade da última fórmula construída.
     * Cada linha **VERDADEIRA** (V) da tabela verdade vale **1 ponto extra**.
 
