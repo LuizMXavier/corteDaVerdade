@@ -76,6 +76,9 @@ O jogo apresenta as peças disponíveis (variáveis, conectores e símbolos de a
 1.  O jogador faz a 1ª tentativa:
     * Acertou. Pontuação máxima.
     * Errou. Recebe dica em linguagem natural.
+      ![Captura de tela da tela principal do jogo](images/tela_frase.png)
+---
+
 2.  2ª tentativa:
     * Acertou. Pontuação intermediária.
 3.  3ª tentativa:
@@ -94,16 +97,28 @@ O jogo apresenta as peças disponíveis (variáveis, conectores e símbolos de a
 
 ### ❌ Se não acertar a fórmula-alvo
 * Cada linha V da tabela verdade da última expressão = **1 ponto extra**.
+  
 
 ### ⭐ Fase Bônus
 * **Sofisma/Silogismo correto** sua pontuação é **dobrada**.
 * **Resposta errada** você perde **metade dos pontos**.
+* **Permanecer calado** você não perde **os pontos**.
+  
+![Captura de tela da tela principal do jogo](images/fase_bonus.png)
+
+---  
 
 ## 🔚 Encerramento
 Ao fim da sessão:
 
 * Sua pontuação total é calculada.
+![Captura de tela da tela principal do jogo](images/tela_final.png)
+---
+
 * Você pode entrar no **Ranking (Top 10)**.
+![Captura de tela da tela principal do jogo](images/tela_rank.png)
+
+---
 
 **Atalhos:**
 * **ENTER / ESC** voltar ao menu
