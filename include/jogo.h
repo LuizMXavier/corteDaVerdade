@@ -16,11 +16,7 @@ typedef struct {
     int num_itens;
 } Nivel;
 
-// Quantidade total de níveis (15 no momento)
-extern const int NUM_NIVEIS;
 
-// Array com todos os níveis do jogo
-extern const Nivel NIVEIS[];
 
 // Função principal do jogo
 void jogo_corte_da_verdade(void);
