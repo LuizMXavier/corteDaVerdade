@@ -105,7 +105,7 @@ O jogo apresenta as peças disponíveis (variáveis, conectores e símbolos de a
 * **Resposta errada** você perde **metade dos pontos**.
 * **Permanecer calado** você não perde **os pontos**.
   
-![Captura de tela da tela principal do jogo](images/fase_bonus.png)
+![Captura de tela da tela principal do jogo](images/tela_bonus.jpeg)
 
 ---  
 
