@@ -551,20 +551,19 @@ static int jogar_nivel(const Nivel *n, int indice_nivel, int *pontuacao) {
         screenGotoxy(SCRSTARTX + 3, y++);
         printf("Tabela-verdade da sua fórmula:");
         screenGotoxy(SCRSTARTX + 3, y++);
-        printf("p q r | F");
+        printf("p q r | V");
         screenGotoxy(SCRSTARTX + 3, y++);
         printf("-------------");
 
         for (int i = 0; i < ultima_tab.n_linhas; i++) {
-            screenGotoxy(SCRSTARTX + 3, y++);
-            printf("%d %d %d | %d",
-                   ultima_tab.valores_p[i],
-                   ultima_tab.valores_q[i],
-                   ultima_tab.valores_r[i],
-                   ultima_tab.resultado[i]);
-        }
+    screenGotoxy(SCRSTARTX + 3, y++);
+    printf("%c %c %c | %c",
+           ultima_tab.valores_p[i] ? 'V' : 'F',
+           ultima_tab.valores_q[i] ? 'V' : 'F',
+           ultima_tab.valores_r[i] ? 'V' : 'F',
+           ultima_tab.resultado[i] ? 'V' : 'F');
+}
 
-        // Pontos extras
         y++;
         screenGotoxy(SCRSTARTX + 3, y++);
         printf("Pontos extras ganhos neste nível: %d", linhas_V);
