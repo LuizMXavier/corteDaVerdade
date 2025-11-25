@@ -75,23 +75,22 @@ O jogo apresenta as peças disponíveis (variáveis, conectores e símbolos de a
 
 1.  O jogador faz a 1ª tentativa:
     * Acertou. Pontuação máxima.
-
-    ![Captura de tela da tela principal do jogo](images/tela_acerto.jpeg)
-
     * Errou. Vai para segunda tentativa.
 
     ![Captura de tela da tela principal do jogo](images/tela_error.jpeg)
 
-      
 3.  2ª tentativa:
     Na segunda tentativa aparece a frase.
       
     ![Captura de tela da tela principal do jogo](images/tela_frase.jpeg)
    
     * Acertou. Pontuação intermediária.
-4.  3ª tentativa:
+  
+    ![Captura de tela da tela principal do jogo](images/tela_acerto.jpeg)
+    
+5.  3ª tentativa:
     * Acertou. Menor pontuação.
-5.  Caso não acerte em nenhuma das três:
+6.  Caso não acerte em nenhuma das três:
     * O jogo monta a tabela verdade da última fórmula construída.
     * Cada linha **VERDADEIRA** (V) da tabela verdade vale **1 ponto extra**.
  
