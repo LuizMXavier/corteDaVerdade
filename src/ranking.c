@@ -116,7 +116,7 @@ void mostrar_rank(void) {
         }
     }
 
-    draw_centered(SCRSTARTY + 17, "Pressione ENTER ou ESC para voltar ao menu...");
+    draw_centered(SCRSTARTY + 20, "Pressione ENTER ou ESC para voltar ao menu...");
     screenUpdate();
     (void)esperar_enter_or_esc_ranking();
 }

@@ -559,8 +559,8 @@ static int jogar_nivel(const Nivel *n, int indice_nivel, int *pontuacao) {
         printf("-------------");
 
         for (int i = 0; i < ultima_tab.n_linhas; i++) {
-    screenGotoxy(SCRSTARTX + 3, y++);
-    printf("%c %c %c | %c",
+        screenGotoxy(SCRSTARTX + 3, y++);
+        printf("%c %c %c | %c",
            ultima_tab.valores_p[i] ? 'V' : 'F',
            ultima_tab.valores_q[i] ? 'V' : 'F',
            ultima_tab.valores_r[i] ? 'V' : 'F',
