@@ -12,24 +12,32 @@
 #include "ui.h"
 #include "ranking.h"
 
+static int ler_tecla_filtrando_setas_menu(void) {
+    int ch = readch();
 
-// ---------------------------------------------------------
-// Ranking (leaderboard)
-// ---------------------------------------------------------
+    if (ch != 27) {
+        return ch;
+    }
 
+    usleep(20000);
+    if (!keyhit()) {
+        return 27; // ESC "real"
+    }
 
+    while (keyhit()) {
+        (void)readch();
+    }
+    return 0;      // seta / tecla especial
+}
+int esperar_enter_or_esc(void) {
+    for (;;) {
+        int ch = ler_tecla_filtrando_setas_menu();
 
-// ---------------------------------------------------------
-// Definição dos níveis (9 níveis principais: 3 F, 3 M, 3 D)
-// ---------------------------------------------------------
-
-
-// ---------------------------------------------------------
-// Fases bônus (uma após cada bloco de dificuldade)
-// ---------------------------------------------------------
-
-
-
+        if (ch == 0)      continue;       // ignora setas
+        if (ch == 27)     return 1;       // ESC
+        if (ch == '\n' || ch == '\r') return 0; // ENTER
+    }
+}
 static void intro_animation(void) {
     screenInit(1);
 
@@ -62,49 +70,6 @@ static void intro_animation(void) {
     screenUpdate();
     (void)esperar_enter_or_esc();
 }
-
-// ---------------------------------------------------------
-// Menu principal e tutorial
-// ---------------------------------------------------------
-
-static int menu_principal(void) {
-    for (;;) {
-        screenInit(1);
-
-        int left = SCRSTARTX + 4;
-        int y = SCRSTARTY + 4;
-
-        screenSetColor(WHITE, BLACK);
-        screenGotoxy(left, y++);
-        printf("##################################################");
-        screenGotoxy(left, y++);
-        printf("1. Iniciar Julgamento");
-        screenGotoxy(left, y++);
-        printf("2. Rank Top 10");
-        screenGotoxy(left, y++);
-        printf("3. Tutorial");
-        screenGotoxy(left, y++);
-        printf("4. Sair do jogo");
-        screenGotoxy(left, y++);
-        printf("##################################################");
-
-        draw_centered(SCRSTARTY + 14, "Escolha uma opção (1-4).");
-        screenUpdate();
-
-        int ch = readch();
-        if (ch == '1') {
-            return 1;
-        } else if (ch == '2') {
-            return 2;
-        } else if (ch == '3') {
-            return 3;
-        } else if (ch == '4') {
-            return 4;
-        }
-        // ESC ou outras teclas: reexibe menu
-    }
-}
-
 static void mostrar_tutorial(void) {
     screenInit(1);
 
@@ -158,13 +123,43 @@ static void mostrar_tutorial(void) {
     screenUpdate();
     (void)esperar_enter_or_esc();
 }
+static int menu_principal(void) {
+    for (;;) {
+        screenInit(1);
 
+        int left = SCRSTARTX + 4;
+        int y = SCRSTARTY + 4;
 
+        screenSetColor(WHITE, BLACK);
+        screenGotoxy(left, y++);
+        printf("##################################################");
+        screenGotoxy(left, y++);
+        printf("1. Iniciar Julgamento");
+        screenGotoxy(left, y++);
+        printf("2. Rank Top 10");
+        screenGotoxy(left, y++);
+        printf("3. Tutorial");
+        screenGotoxy(left, y++);
+        printf("4. Sair do jogo");
+        screenGotoxy(left, y++);
+        printf("##################################################");
 
-// ---------------------------------------------------------
-// Loop principal (menu + jogo + rank)
-// ---------------------------------------------------------
+        draw_centered(SCRSTARTY + 14, "Escolha uma opção (1-4).");
+        screenUpdate();
 
+        int ch = readch();
+        if (ch == '1') {
+            return 1;
+        } else if (ch == '2') {
+            return 2;
+        } else if (ch == '3') {
+            return 3;
+        } else if (ch == '4') {
+            return 4;
+        }
+        // ESC ou outras teclas: reexibe menu
+    }
+}
 void jogo_corte_da_verdade(void) {
     carregar_rank();
 
@@ -196,46 +191,3 @@ void jogo_corte_da_verdade(void) {
     screenUpdate();
     (void)esperar_enter_or_esc();
 }
-// Lê tecla para telas de confirmação, filtrando setas.
-static int ler_tecla_filtrando_setas_menu(void) {
-    int ch = readch();
-
-    if (ch != 27) {
-        return ch;
-    }
-
-    usleep(20000);
-    if (!keyhit()) {
-        // ESC sozinho
-        return 27;
-    }
-
-    // Sequência de seta / tecla especial: consome e ignora
-    while (keyhit()) {
-        (void)readch();
-    }
-    return 0;
-}
-
-// 0 = ENTER, 1 = ESC
-int esperar_enter_or_esc(void) {
-    for (;;) {
-        int ch = ler_tecla_filtrando_setas_menu();
-
-        if (ch == 0) {
-            // seta / tecla especial: ignora
-            continue;
-        }
-
-        if (ch == 27) {      // ESC
-            return 1;
-        }
-
-        if (ch == '\n' || ch == '\r') {  // ENTER
-            return 0;
-        }
-
-        // Outras teclas: ignora
-    }
-}
-

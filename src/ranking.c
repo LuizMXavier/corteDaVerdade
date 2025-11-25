@@ -18,16 +18,11 @@ typedef struct {
 static RankEntry g_rank[MAX_RANK];
 static int g_rank_count = 0;
 
-// ---------------------------------------------------------
-// Função local para esperar ENTER ou ESC
-// (mesma lógica usada no jogo.c)
-// ---------------------------------------------------------
-
 static int esperar_enter_or_esc_ranking(void) {
     int ch;
     for (;;) {
         ch = readch();
-        if (ch == 27) { // ESC
+        if (ch == 27) {
             return 1;
         }
         if (ch == '\n' || ch == '\r') {
@@ -35,12 +30,6 @@ static int esperar_enter_or_esc_ranking(void) {
         }
     }
 }
-
-// ---------------------------------------------------------
-// Ranking: carregar, salvar, atualizar e mostrar
-// (código copiado do jogo.c original, só removido o 'static')
-// ---------------------------------------------------------
-
 static int cmp_rank(const void *a, const void *b) {
     const RankEntry *ra = (const RankEntry *)a;
     const RankEntry *rb = (const RankEntry *)b;
@@ -48,7 +37,6 @@ static int cmp_rank(const void *a, const void *b) {
         return rb->pontos - ra->pontos; // decrescente
     return 0;
 }
-
 void carregar_rank(void) {
     g_rank_count = 0;
 
@@ -71,7 +59,6 @@ void carregar_rank(void) {
     if (g_rank_count > 1)
         qsort(g_rank, g_rank_count, sizeof(RankEntry), cmp_rank);
 }
-
 void salvar_rank(void) {
     FILE *f = fopen(RANK_FILE, "w");
     if (!f) return;
@@ -84,11 +71,9 @@ void salvar_rank(void) {
     }
     fclose(f);
 }
-
 void atualizar_rank(const char *nome, int pontos) {
     if (pontos <= 0) return;
 
-    // Se já houver 10, só entra se for maior que o último
     if (g_rank_count == MAX_RANK && pontos <= g_rank[g_rank_count - 1].pontos)
         return;
 
@@ -106,7 +91,6 @@ void atualizar_rank(const char *nome, int pontos) {
     if (g_rank_count > 1)
         qsort(g_rank, g_rank_count, sizeof(RankEntry), cmp_rank);
 }
-
 void mostrar_rank(void) {
     screenInit(1);
 

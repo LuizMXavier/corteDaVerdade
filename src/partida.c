@@ -1,3 +1,5 @@
+// src/partida.c
+
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
@@ -11,10 +13,6 @@
 #include "ui.h"
 #include "ranking.h"
 #include "partida.h"
-
-// ---------------------------------------------------------
-// Fases bônus (uma após cada bloco de dificuldade)
-// ---------------------------------------------------------
 
 typedef enum {
     ARG_SOFISMA,
@@ -47,11 +45,6 @@ static const FaseBonus FASES_BONUS[3] = {
         ARG_SILOGISMO
     }
 };
-
-// ---------------------------------------------------------
-// Funções auxiliares internas da partida
-// ---------------------------------------------------------
-
 static int contar_verdadeiras(const TabelaVerdade *tab) {
     if (!tab) return 0;
     int count = 0;
@@ -60,8 +53,6 @@ static int contar_verdadeiras(const TabelaVerdade *tab) {
     }
     return count;
 }
-
-// Remove espaços e normaliza para comparação de fórmulas
 static void normalizar_formula(const char *src, char *dst, size_t tam) {
     size_t j = 0;
     for (size_t i = 0; src[i] != '\0' && j < tam - 1; i++) {
@@ -72,15 +63,6 @@ static void normalizar_formula(const char *src, char *dst, size_t tam) {
     }
     dst[j] = '\0';
 }
-
-// ---------------------------------------------------------
-// Entrada de teclado: leitura de linha / fórmula
-// ---------------------------------------------------------
-// Lê uma tecla, filtrando sequências de setas (ESC + ...).
-// Retorna:
-//   0   -> tecla especial ignorada (setas/F-keys)
-//   27  -> ESC "real"
-//   outro valor -> caractere normal (ENTER, letras, números etc.)
 static int ler_tecla_filtrando_setas(void) {
     int ch = readch();
 
@@ -89,7 +71,7 @@ static int ler_tecla_filtrando_setas(void) {
     }
 
     // Pode ser ESC sozinho ou início de sequência (setas).
-    // Espera um pouquinho para ver se chegam mais bytes.
+    // Espera um pouco para ver se chegam mais bytes.
     usleep(20000); // 20 ms
 
     if (!keyhit()) {
@@ -105,8 +87,6 @@ static int ler_tecla_filtrando_setas(void) {
     // Ignora a tecla especial
     return 0;
 }
-
-// 0 = OK, 1 = ESC
 static int ler_linha(char *buf, size_t tam, int x, int y) {
     size_t len = 0;
     buf[0] = '\0';
@@ -123,8 +103,6 @@ static int ler_linha(char *buf, size_t tam, int x, int y) {
         }
 
         if (ch == 27) { // ESC "real"
-    
-
             screenHideCursor();
             screenUpdate();
             buf[0] = '\0';
@@ -153,16 +131,9 @@ static int ler_linha(char *buf, size_t tam, int x, int y) {
         }
     }
 }
-
-// 0 = OK, 1 = ESC
 static int ler_formula(char *expr, size_t tam, int x, int y) {
     return ler_linha(expr, tam, x, y);
 }
-
-// ---------------------------------------------------------
-// Validação de variáveis permitidas por nível
-// ---------------------------------------------------------
-
 static int variaveis_validas(const Nivel *n, const char *expr, char *msg, size_t tam_msg) {
     char tipo = n->codigo[0]; // 'F', 'M' ou 'D'
     int permite_q = (tipo != 'F');    // F: só p
@@ -187,11 +158,6 @@ static int variaveis_validas(const Nivel *n, const char *expr, char *msg, size_t
     msg[0] = '\0';
     return 1;
 }
-
-// ---------------------------------------------------------
-// Animação de transição entre níveis
-// ---------------------------------------------------------
-
 static void anim_transicao(int proximo_numero_nivel) {
     if (proximo_numero_nivel < 1 || proximo_numero_nivel > NUM_NIVEIS) return;
 
@@ -216,12 +182,6 @@ static void anim_transicao(int proximo_numero_nivel) {
         usleep(250000); // 0,25 s
     }
 }
-
-// ---------------------------------------------------------
-// Nome do réu
-// ---------------------------------------------------------
-
-// retorna 1 = ok, 0 = cancelado (ESC)
 int pedir_nome_reu(char *nome, size_t tam) {
     screenInit(1);
 
@@ -247,12 +207,6 @@ int pedir_nome_reu(char *nome, size_t tam) {
 
     return 1;
 }
-
-// ---------------------------------------------------------
-// Fase Bônus
-// ---------------------------------------------------------
-// retorna 0 = ok, 1 = ESC (abortar partida)
-
 static int jogar_bonus(const FaseBonus *b, int *pontuacao) {
     screenInit(1);
 
@@ -292,7 +246,7 @@ static int jogar_bonus(const FaseBonus *b, int *pontuacao) {
         int ch = ler_tecla_filtrando_setas();
 
         if (ch == 0) {
-            // seta / tecla especial: só ignora
+            // seta / tecla especial: ignora
             continue;
         }
 
@@ -327,19 +281,6 @@ static int jogar_bonus(const FaseBonus *b, int *pontuacao) {
         }
     }
 }
-
-// ---------------------------------------------------------
-// Jogabilidade de um nível
-// ---------------------------------------------------------
-// retorna 0 = nível jogado normalmente
-//         1 = jogador apertou ESC (abortar partida)
-
-// ---------------------------------------------------------
-// Jogabilidade de um nível
-// ---------------------------------------------------------
-// retorna 0 = nível jogado normalmente
-//         1 = jogador apertou ESC (abortar partida)
-
 static int jogar_nivel(const Nivel *n, int indice_nivel, int *pontuacao) {
     char expr[512];
     char ultima_expr[512] = "";
@@ -378,7 +319,7 @@ static int jogar_nivel(const Nivel *n, int indice_nivel, int *pontuacao) {
 
         draw_horizontal_bar(SCRSTARTY + 4, width);
 
-        // Coordenadas (layout igual ao original)
+        // Coordenadas (layout igual à versão funcional anterior)
         int y_juiz       = SCRSTARTY + 5;
         int y_provas_lbl = y_juiz + 2;
         int y_provas_ln  = y_provas_lbl + 1;
@@ -392,7 +333,7 @@ static int jogar_nivel(const Nivel *n, int indice_nivel, int *pontuacao) {
         int y_dep_inp = y_dep_lbl;
         int y_msg     = y_dep_lbl + 2;
 
-        // Juiz (caixinha igual à versão funcional anterior)
+        // Juiz (caixinha)
         screenGotoxy(left, y_juiz);
         printf("Juiz:");
         screenSetColor(WHITE, BLACK);
@@ -643,12 +584,6 @@ static int jogar_nivel(const Nivel *n, int indice_nivel, int *pontuacao) {
 
     return 0;
 }
-
-// ---------------------------------------------------------
-// Execução de uma partida completa
-// ---------------------------------------------------------
-// retorna a pontuação acumulada (mesmo se ESC no meio)
-
 int executar_partida(const char *nome_reu) {
     int pontuacao = 0;
 

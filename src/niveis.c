@@ -1,14 +1,8 @@
-// src/niveis.c
 #include "niveis.h"
-
-// ---------------------------------------------------------
-// Níveis principais do jogo (Fácil, Médio, Difícil)
-// ---------------------------------------------------------
 
 const int NUM_NIVEIS = 9;
 
 const Nivel NIVEIS[9] = {
-    // --- F: 1 variável (FÁCIL) ---
     {
         "F1",
         "p v ~p",
@@ -36,8 +30,6 @@ const Nivel NIVEIS[9] = {
         { "p", "->", "p", "p", "->", "p", "p", "->" },
         8
     },
-
-    // --- M: 2 variáveis (MÉDIO) ---
     {
         "M1",
         "p -> (p v q)",
@@ -68,8 +60,6 @@ const Nivel NIVEIS[9] = {
         { "p", "^", "p", "->", "q", "->", "q", "p" },
         8
     },
-
-    // --- D: 3 variáveis (DIFÍCIL) ---
     {
         "D1",
         "[(p -> q) ^ (q -> r)] -> (p -> r)",

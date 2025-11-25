@@ -2,8 +2,6 @@
 #include <ctype.h>
 #include "tautologia.h"
 
-// ---------- PARSER PARA OS CONECTIVOS v, ^, ~, ->, <-> ----------
-
 typedef struct {
     const char *input;
     int pos;
@@ -36,9 +34,8 @@ static int match_str(Parser *p, const char *s) {
     return 1;
 }
 
-static int parse_expr(Parser *p); // forward
+static int parse_expr(Parser *p);
 
-// primary := VAR | '(' expr ')' | '[' expr ']'
 static int parse_primary(Parser *p) {
     skip_ws(p);
     char c = p->input[p->pos];
@@ -65,17 +62,13 @@ static int parse_primary(Parser *p) {
         return p->val_r;
     }
 
-    // caractere inesperado ou fim da string: retorna 0 para não quebrar
     if (c == '\0' || c == '\n') {
         return 0;
     }
 
-    // ignora caractere desconhecido
-    p->pos++;
     return 0;
 }
 
-// unary := '~' unary | primary
 static int parse_unary(Parser *p) {
     skip_ws(p);
     if (match_char(p, '~')) {
@@ -85,7 +78,6 @@ static int parse_unary(Parser *p) {
     return parse_primary(p);
 }
 
-// and := unary ('^' unary)*
 static int parse_and(Parser *p) {
     int left = parse_unary(p);
     for (;;) {
@@ -100,7 +92,6 @@ static int parse_and(Parser *p) {
     return left;
 }
 
-// or := and ('v' and)*
 static int parse_or(Parser *p) {
     int left = parse_and(p);
     for (;;) {
@@ -117,7 +108,6 @@ static int parse_or(Parser *p) {
     return left;
 }
 
-// impl := or ('->' or)*
 static int parse_impl(Parser *p) {
     int left = parse_or(p);
     for (;;) {
@@ -134,7 +124,6 @@ static int parse_impl(Parser *p) {
     return left;
 }
 
-// bicond := impl ('<->' impl)*
 static int parse_bicond(Parser *p) {
     int left = parse_impl(p);
     for (;;) {
@@ -142,7 +131,6 @@ static int parse_bicond(Parser *p) {
         int start = p->pos;
         if (match_str(p, "<->")) {
             int right = parse_impl(p);
-            // equivalência: (A ∧ B) v (~A ∧ ~B)
             left = (left && right) || (!left && !right);
         } else {
             p->pos = start;
@@ -156,7 +144,6 @@ static int parse_expr(Parser *p) {
     return parse_bicond(p);
 }
 
-// avalia a fórmula para valores específicos de p, q, r
 static int avaliar_formula(const char *expr, int vp, int vq, int vr) {
     Parser p;
     p.input = expr;
@@ -168,16 +155,12 @@ static int avaliar_formula(const char *expr, int vp, int vq, int vr) {
     return val ? 1 : 0;
 }
 
-// ------------- DETECÇÃO DE VARIÁVEIS USADAS P, Q, R ---------------
-
 static int usa_variavel(const char *expr, char minuscula, char maiuscula) {
     for (int i = 0; expr[i] != '\0'; i++) {
         if (expr[i] == minuscula || expr[i] == maiuscula) return 1;
     }
     return 0;
 }
-
-// ------------- AVALIA EXPRESSÃO E MONTA TABELA VERDADE ------------
 
 ResultadoFormula avaliar_expressao(const char *expr_original,
                                    TabelaVerdade *tabela) {
@@ -187,11 +170,10 @@ ResultadoFormula avaliar_expressao(const char *expr_original,
 
     int n_var = usa_p + usa_q + usa_r;
     if (n_var == 0) {
-        // sem variáveis: vamos tratar como se tivesse 1 variável
         n_var = 1;
     }
 
-    int n_linhas = 1 << n_var; // 2^n_var (máximo 8)
+    int n_linhas = 1 << n_var;
 
     if (tabela) {
         tabela->n_variaveis = n_var;
@@ -203,8 +185,6 @@ ResultadoFormula avaliar_expressao(const char *expr_original,
 
     for (int linha = 0; linha < n_linhas; linha++) {
         int p = 0, q = 0, r = 0;
-
-        // Mapeia bits da linha nas variáveis que realmente aparecem
         int bit_index = 0;
         if (usa_p) {
             p = (linha >> bit_index) & 1;
@@ -240,14 +220,12 @@ ResultadoFormula avaliar_expressao(const char *expr_original,
     return RESULT_CONTINGENCIA;
 }
 
-// ------------- IMPRESSÃO SIMPLES DA TABELA VERDADE ----------------
-
 void imprimir_tabela(const TabelaVerdade *tabela) {
     if (!tabela) return;
 
     printf("Tabela verdade (%d variaveis, %d linhas):\n",
            tabela->n_variaveis, tabela->n_linhas);
-    printf("p q r | F\n");
+    printf("p q r | V\n");
     printf("-------------\n");
 
     for (int i = 0; i < tabela->n_linhas; i++) {
@@ -260,7 +238,6 @@ void imprimir_tabela(const TabelaVerdade *tabela) {
 }
 
 #ifdef TESTE_TAUTOLOGIA
-// Pequeno main de teste manual (opcional)
 int main(void) {
     const char *exprs[] = {
         "p v ~p",
