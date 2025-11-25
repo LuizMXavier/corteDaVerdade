@@ -23,7 +23,7 @@ O Corte da Verdade é um jogo interativo e educativo no qual o jogador assume o 
 O jogador deve construir fórmulas de lógica proposicional utilizando:
 
 * **Variáveis**: p, q, r
-* **Conectores**: :v, ^, ~, →, ↔
+* **Conectores**: v, ^, ~, →, ↔
 * **símbolos de agrupamento**: (), []
 
 Cada rodada apresenta peças limitadas, e o jogador deve usar a lógica para montar tautologias — fórmulas verdadeiras em todas as interpretações possíveis.
