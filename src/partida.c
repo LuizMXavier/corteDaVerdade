@@ -624,14 +624,14 @@ int executar_partida(const char *nome_reu) {
     snprintf(buf, sizeof(buf), "Pontuação final acumulada: %d pontos.", pontuacao);
     draw_centered(SCRSTARTY + 7, buf);
 
-    int max_base = NUM_NIVEIS * 50; // sem contar bônus / extras
-    int faixa_alto = max_base * 80 / 100;
-    int faixa_medio = max_base * 50 / 100;
+    int max_base = 2100;
+    int media_alta = max_base * 70 / 100;
+    int media_baixa = max_base * 50 / 100;
 
     const char *classif;
-    if (pontuacao >= faixa_alto) {
+    if (pontuacao >= media_alta) {
         classif = "Réu ABSOLVIDO (Mestre da lógica)!";
-    } else if (pontuacao >= faixa_medio) {
+    } else if (pontuacao >= media_baixa) {
         classif = "Réu em LIBERDADE CONDICIONAL (Bom argumentador).";
     } else {
         classif = "Réu CONDENADO (Precisa revisar sua lógica).";
