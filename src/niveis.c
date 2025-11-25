@@ -18,8 +18,8 @@ const Nivel NIVEIS[9] = {
         "p: A moção é válida.",
         "Não é verdade que a moção é válida e não é válida.",
         RESULT_TAUTOLOGIA,
-        { "p", "^", "~", "p", "~", "p", "^", "p" },
-        8
+        { "p", "^", "~", "p", "~", "p", "^", "p", "(", ")" },
+        10
     },
     {
         "F3",
@@ -36,8 +36,8 @@ const Nivel NIVEIS[9] = {
         "p: A corte está em sessão. q: O caso foi arquivado.",
         "Se a corte está em sessão, então a corte está em sessão ou o caso foi arquivado.",
         RESULT_TAUTOLOGIA,
-        { "p", "->", "p", "v", "q", "p", "v", "q" },
-        8
+        { "p", "->", "p", "v", "q", "p", "v", "q", "(", ")" },
+        10
     },
     {
         "M2",
@@ -46,8 +46,8 @@ const Nivel NIVEIS[9] = {
         "Se o promotor provou o crime e o juiz aceitou a prova,"
         "então o promotor provou o crime.",
         RESULT_TAUTOLOGIA,
-        { "p", "^", "q", "->", "p", "p", "^", "q" },
-        8
+        { "p", "^", "q", "->", "p", "p", "^", "q", "(", ")" },
+        10
     },
     {
         "M3",
@@ -57,8 +57,8 @@ const Nivel NIVEIS[9] = {
         ",então o réu será condenado),"
         "então o réu será condenado.",
         RESULT_TAUTOLOGIA,
-        { "p", "^", "p", "->", "q", "->", "q", "p" },
-        8
+        { "p", "^", "p", "->", "q", "->", "q", "p", "(", ")", "[", "]" },
+        12
     },
     {
         "D1",
@@ -68,8 +68,8 @@ const Nivel NIVEIS[9] = {
         "e (se o juri ouve a prova, então a decisão é justa), "
         "então (se o depoimento é aceito, então a decisao é justa). ",
         RESULT_TAUTOLOGIA,
-        { "p", "->", "q", "^", "q", "->", "r", "p" },
-        8
+        { "p", "->", "q", "^", "q", "->", "r", "p",  "(", ")", "[", "]" },
+        12
     },
     {
         "D2",
@@ -78,8 +78,8 @@ const Nivel NIVEIS[9] = {
         "Se (se o crime foi grave, então a pena é máxima e não há recurso), "
         "então (se o crime foi grave, então a pena é máxima).",
         RESULT_TAUTOLOGIA,
-        { "p", "->", "q", "^", "r", "->", "p", "->" },
-        8
+        { "p", "->", "q", "^", "r", "->", "p", "->",  "(", ")", "[", "]" },
+        12
     },
     {
         "D3",
@@ -89,7 +89,7 @@ const Nivel NIVEIS[9] = {
         "se, e somente se, (se o juiz decide hoje e não a defesa apela, "
         "então o réu aguarda em liberdade).",
         RESULT_TAUTOLOGIA,
-        { "p", "->", "q", "v", "r", "<->", "p", "^" },
-        8
+        { "p", "->", "q", "v", "r", "<->", "p", "^", "(", ")", "[", "]"  },
+        1
     }
 };

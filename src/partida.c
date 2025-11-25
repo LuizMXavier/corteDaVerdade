@@ -320,10 +320,10 @@ static int jogar_nivel(const Nivel *n, int indice_nivel, int *pontuacao) {
         draw_horizontal_bar(SCRSTARTY + 4, width);
 
         // Coordenadas (layout igual à versão funcional anterior)
-        int y_juiz       = SCRSTARTY + 5;
-        int y_provas_lbl = y_juiz + 2;
-        int y_provas_ln  = y_provas_lbl + 1;
-        int y_defesa     = y_provas_ln + 1;
+        int y_juiz       = SCRSTARTY + 6;
+        int y_provas_lbl = y_juiz + 2.3;
+        int y_provas_ln  = y_provas_lbl + 1.3;
+        int y_defesa     = y_provas_ln + 2;
 
         int y_cmd_top    = MAXY - 4;
         int y_cmd_text   = y_cmd_top + 1;
@@ -335,45 +335,32 @@ static int jogar_nivel(const Nivel *n, int indice_nivel, int *pontuacao) {
 
         // Juiz (caixinha)
         screenGotoxy(left, y_juiz);
-        printf("Juiz:");
-        screenSetColor(WHITE, BLACK);
-        screenGotoxy(left + 8, y_juiz - 1);
-        printf("+-------------------------------+");
-        screenGotoxy(left + 8, y_juiz);
-        printf("| Réu, qual a sua defesa?      |");
-        screenGotoxy(left + 8, y_juiz + 1);
-        printf("+-------------------------------+");
+        printf("Juiz: | Réu, qual a sua defesa? |");
+        screenSetColor(YELLOW, BLACK);
+        
+
+        screenGotoxy(left, y_provas_lbl);
+        printf("Use as Provas para seu depoimento:");
 
         // Provas
         screenGotoxy(left, y_provas_lbl);
         printf("Use as Provas para seu depoimento:");
 
-        char linha_provas[256];
-        linha_provas[0] = '\0';
+        screenSetColor(LIGHTCYAN, BLACK);
+        screenGotoxy(left, y_provas_ln);
+
         if (n->num_itens > 0) {
-            strcat(linha_provas, " ");
+            printf(" ");
             for (int i = 0; i < n->num_itens; i++) {
-                char temp[32];
-                snprintf(temp, sizeof(temp), "|| %s ", n->itens[i]);
-                strncat(linha_provas, temp,
-                        sizeof(linha_provas) - strlen(linha_provas) - 1);
+                printf("|| %s ", n->itens[i]);
             }
-            strncat(linha_provas, "||",
-                    sizeof(linha_provas) - strlen(linha_provas) - 1);
+            printf("||");
         } else {
-            strncpy(linha_provas, "(sem itens definidos)",
-                    sizeof(linha_provas) - 1);
-            linha_provas[sizeof(linha_provas) - 1] = '\0';
+            printf("(sem itens definidos)");
         }
 
-        int len_provas = (int)strlen(linha_provas);
-        int x_provas = (MAXX - len_provas) / 2;
-        if (x_provas < left) x_provas = left;
-
-        screenSetColor(LIGHTCYAN, BLACK);
-        screenGotoxy(x_provas, y_provas_ln);
-        printf("%s", linha_provas);
         screenSetColor(WHITE, BLACK);
+
 
         // Defesa (dica) com quebra de linha
         if (dica_mostrada) {

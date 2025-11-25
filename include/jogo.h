@@ -12,7 +12,7 @@ typedef struct {
     ResultadoFormula esperado;      // resultado correto (tautologia, etc.)
 
     // Sacola de itens (símbolos mostrados na tela) – até 8 itens
-    const char *itens[8];
+    const char *itens[16];
     int num_itens;
 } Nivel;
 
