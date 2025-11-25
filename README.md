@@ -95,7 +95,7 @@ O jogo apresenta as peças disponíveis (variáveis, conectores e símbolos de a
     * O jogo monta a tabela verdade da última fórmula construída.
     * Cada linha **VERDADEIRA** (V) da tabela verdade vale **1 ponto extra**.
  
-![Captura de tela da tela principal do jogo](images/tela_tabela.png)
+![Captura de tela da tela principal do jogo](images/tela_tabela.jpeg)
 
 
 ## 🏆 Sistema de Pontuação
