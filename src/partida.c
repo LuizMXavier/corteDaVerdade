@@ -257,7 +257,7 @@ static int jogar_bonus(const FaseBonus *b, int *pontuacao) {
             int escolha = ch - '0';
 
             if (escolha == 3) {
-                // Fica em silêncio: não ganha nem perde pontos
+                screenSetColor(YELLOW, BLACK);
                 draw_centered(SCRSTARTY + 20, "O Réu permaneceu calado. A Corte segue em frente...");
                 screenUpdate();
                 usleep(1500000);
@@ -268,11 +268,13 @@ static int jogar_bonus(const FaseBonus *b, int *pontuacao) {
                            (escolha == 2 && b->tipo == ARG_SILOGISMO));
 
             if (correta) {
-                *pontuacao += 50;
-                draw_centered(SCRSTARTY + 20, "Análise correta! +50 pontos na fase bônus.");
+                *pontuacao = *pontuacao * 2;
+                screenSetColor(LIGHTGREEN, BLACK);
+                draw_centered(SCRSTARTY + 20, "Análise correta! Seus pontos foram duplicados!");
             } else {
-                *pontuacao -= 20;
-                draw_centered(SCRSTARTY + 20, "Análise equivocada... -20 pontos.");
+                *pontuacao = *pontuacao / 2;
+                screenSetColor(LIGHTRED, BLACK);
+                draw_centered(SCRSTARTY + 20, "Análise equivocada... perdeu metado dos pontos.");
             }
 
             screenUpdate();
@@ -456,29 +458,43 @@ static int jogar_nivel(const Nivel *n, int indice_nivel, int *pontuacao) {
         }
 
         // Avalia expressão
-        TabelaVerdade tab;
-        ResultadoFormula res = avaliar_expressao(expr, &tab);
-        ultima_tab = tab;
-        ultimo_res = res;
-        strncpy(ultima_expr, expr, sizeof(ultima_expr) - 1);
-        ultima_expr[sizeof(ultima_expr) - 1] = '\0';
+        // Avalia expressão
+    TabelaVerdade tab;
+    ResultadoFormula res = avaliar_expressao(expr, &tab);
+    ultima_tab = tab;
+    ultimo_res = res;
+    strncpy(ultima_expr, expr, sizeof(ultima_expr) - 1);
+    ultima_expr[sizeof(ultima_expr) - 1] = '\0';
 
-        // Resultado esperado: tautologia (ou o que estiver em n->esperado)
-        int correta = (res == n->esperado);
+    // Resultado esperado: tautologia (ou o que estiver em n->esperado)
+    int correta = (res == n->esperado);
 
-        screenGotoxy(left, y_msg);
-        if (correta) {
-            screenSetColor(LIGHTGREEN, BLACK);
-            printf("Depoimento consistente com a lógica da Corte.");
-            screenSetColor(WHITE, BLACK);
-            *pontuacao += 50;
-            acertou_tautologia = 1;
+    screenGotoxy(left, y_msg);
+
+    if (correta) {
+        // Pontos conforme a tentativa: 1ª = 50, 2ª = 30, 3ª = 20
+        int pontos_ganhos;
+        if (tentativa == 1) {
+            pontos_ganhos = 50;
+        } else if (tentativa == 2) {
+            pontos_ganhos = 30;
         } else {
-            screenSetColor(LIGHTRED, BLACK);
-            printf("Depoimento NÃO condiz com a lógica da Corte.");
-            screenSetColor(WHITE, BLACK);
-            *pontuacao -= 20;
+            pontos_ganhos = 20;
         }
+
+        screenSetColor(LIGHTGREEN, BLACK);
+        printf("Depoimento consistente com a lógica da Corte.");
+        screenSetColor(WHITE, BLACK);
+
+        *pontuacao += pontos_ganhos;
+        acertou_tautologia = 1;
+        } else {
+        screenSetColor(LIGHTRED, BLACK);
+        printf("Depoimento NÃO condiz com a lógica da Corte.");
+        screenSetColor(WHITE, BLACK);
+        // Nenhuma perda de pontos em caso de erro
+    }
+
 
         screenGotoxy(left, y_msg + 1);
         printf("Classificação da fórmula: ");

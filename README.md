@@ -2,7 +2,7 @@
 ## 🎮 Jogo Educativo de Lógica Proposicional
 
 ---
-![Captura de tela da tela principal do jogo](images/tela_inicial.png)
+![Captura de tela da tela principal do jogo](images/tela_inicial.jpeg)
 ---
 O Corte da Verdade é um jogo interativo e educativo no qual o jogador assume o papel de um **réu** em um tribunal onde ninguém pode mentir. Para vencer, você deve montar **tautologias** usando variáveis e conectivos lógicos — e convencer o juiz de que seu argumento é irrefutável.
 
@@ -75,20 +75,26 @@ O jogo apresenta as peças disponíveis (variáveis, conectores e símbolos de a
 
 1.  O jogador faz a 1ª tentativa:
     * Acertou. Pontuação máxima.
-    * Errou. Recebe dica em linguagem natural.
-      
-      ![Captura de tela da tela principal do jogo](images/tela_frase.png)
----
+    * Errou. Vai para segunda tentativa.
 
-2.  2ª tentativa:
+    ![Captura de tela da tela principal do jogo](images/tela_error.jpeg)
+
+3.  2ª tentativa:
+    Na segunda tentativa aparece a frase.
+      
+    ![Captura de tela da tela principal do jogo](images/tela_frase.jpeg)
+   
     * Acertou. Pontuação intermediária.
-3.  3ª tentativa:
+  
+    ![Captura de tela da tela principal do jogo](images/tela_acerto.jpeg)
+    
+5.  3ª tentativa:
     * Acertou. Menor pontuação.
-4.  Caso não acerte em nenhuma das três:
+6.  Caso não acerte em nenhuma das três:
     * O jogo monta a tabela verdade da última fórmula construída.
     * Cada linha **VERDADEIRA** (V) da tabela verdade vale **1 ponto extra**.
  
-![Captura de tela da tela principal do jogo](images/tela_tabela.png)
+![Captura de tela da tela principal do jogo](images/tela_tabela.jpeg)
 
 
 ## 🏆 Sistema de Pontuação
@@ -105,7 +111,7 @@ O jogo apresenta as peças disponíveis (variáveis, conectores e símbolos de a
 * **Resposta errada** você perde **metade dos pontos**.
 * **Permanecer calado** você não perde **os pontos**.
   
-![Captura de tela da tela principal do jogo](images/fase_bonus.png)
+![Captura de tela da tela principal do jogo](images/tela_bonus.jpeg)
 
 ---  
 
