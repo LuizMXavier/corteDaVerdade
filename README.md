@@ -2,7 +2,7 @@
 ## 🎮 Jogo Educativo de Lógica Proposicional
 
 ---
-![Captura de tela da tela principal do jogo](images/tela_inicial.png)
+![Captura de tela da tela principal do jogo](images/tela_inicial.jpeg)
 ---
 O Corte da Verdade é um jogo interativo e educativo no qual o jogador assume o papel de um **réu** em um tribunal onde ninguém pode mentir. Para vencer, você deve montar **tautologias** usando variáveis e conectivos lógicos — e convencer o juiz de que seu argumento é irrefutável.
 
@@ -77,7 +77,7 @@ O jogo apresenta as peças disponíveis (variáveis, conectores e símbolos de a
     * Acertou. Pontuação máxima.
     * Errou. Recebe dica em linguagem natural.
       
-      ![Captura de tela da tela principal do jogo](images/tela_frase.png)
+      ![Captura de tela da tela principal do jogo](images/tela_frase.jpeg)
 ---
 
 2.  2ª tentativa:
