@@ -53,9 +53,9 @@ const Nivel NIVEIS[9] = {
         "M3",
         "[p ^ (p -> q)] -> q",
         "p: A lei é constitucional. q: O réu será condenado.",
-        "Se a lei é constitucional e (se a lei é constitucional"
-        ",então o réu será condenado),"
-        "então o réu será condenado.",
+            "Se a lei é constitucional e, se a lei é constitucional,"
+    "    então o réu será condenado, então o réu será condenado.",
+
         RESULT_TAUTOLOGIA,
         { "p", "^", "p", "->", "q", "->", "q", "p", "(", ")", "[", "]" },
         12
@@ -75,8 +75,8 @@ const Nivel NIVEIS[9] = {
         "D2",
         "[p -> (q ^ r)] -> (p -> q)",
         "p: O crime foi grave. q: A pena e maxima. r: Nao ha recurso.",
-        "Se (se o crime foi grave, então a pena é máxima e não há recurso), "
-        "então (se o crime foi grave, então a pena é máxima).",
+        "Se (se o crime foi grave, então a pena é máxima e não     há recurso), "
+        "  então (se o crime foi grave, então a pena  é máxima).",
         RESULT_TAUTOLOGIA,
         { "p", "->", "q", "^", "r", "->", "p", "->",  "(", ")", "[", "]" },
         12
@@ -85,11 +85,11 @@ const Nivel NIVEIS[9] = {
         "D3",
         "[p -> (q v r)] <-> [(p ^ ~q) -> r]",
         "p: O juiz decide hoje. q: A defesa apela. r: O reu aguarda em liberdade.",
-        "(Se o juiz decide hoje, então a defesa apela ou o réu aguarda em liberdade) "
-        "se, e somente se, (se o juiz decide hoje e não a defesa apela, "
-        "então o réu aguarda em liberdade).",
+        "(Se o juiz decide hoje, então a defesa apela ou o réu      aguarda em liberdade) "
+        " se, e somente se, (se o juiz decide   hoje e não a defesa apela, "
+        "então o réu aguarda em         liberdade).",
         RESULT_TAUTOLOGIA,
         { "p", "->", "q", "v", "r", "<->", "p", "^", "(", ")", "[", "]"  },
-        1
+        12
     }
 };
