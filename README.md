@@ -120,13 +120,13 @@ Ao fim da sessão:
 
 * Sua pontuação total é calculada.
   
-![Captura de tela da tela principal do jogo](images/tela_final.png)
+![Captura de tela da tela principal do jogo](images/tela_encerramento.jpeg)
 
 ---
 
 * Você pode entrar no **Ranking (Top 10)**.
   
-![Captura de tela da tela principal do jogo](images/tela_rank.png)
+![Captura de tela da tela principal do jogo](images/tela_rank.jpeg)
 
 ---
 
