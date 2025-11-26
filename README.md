@@ -1,7 +1,7 @@
 # 🏛️ Corte da Verdade
 
 ## Programação Imperativa e Funcional - 2025.2.
-## INSTITUIÇÃO CESAR School
+## Instituição Cesar School
 
 --
 
