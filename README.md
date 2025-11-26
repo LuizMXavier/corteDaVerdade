@@ -1,5 +1,4 @@
-# 🏛️ Corte da Verdade
-
+## 🎮 Jogo Educativo de Lógica Proposicional
 ## Programação Imperativa e Funcional - 2025.2.
 ## Instituição Cesar School
 
@@ -61,7 +60,7 @@ Após compilar, execute o jogo:
 
 ---
 
-## 🎮 Jogo Educativo de Lógica Proposicional
+# 🏛️ Corte da Verdade
 
 ---
 ![Captura de tela da tela principal do jogo](images/tela_inicial.jpeg)
