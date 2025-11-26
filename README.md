@@ -3,25 +3,63 @@
 ## Programação Imperativa e Funcional - 2025.2.
 ## INSTITUIÇÃO CESAR School
 
-# cli-lib
-Command Line Interface library, for developing CLI applications and games in C. It has functions to access keyboard, screen and manage timing tasks.
+--
 
-## Requirements
-- This library works with the follwing OS:
-   - Linux based (Ubuntu, etc)
-   - MacOS
-- It is necessary to have GCC installed.
+## 🚀 Como instalar e rodar o jogo
+## 1. Pré-requisitos
 
-## Usage 
-The file `main.c` has an example of how to use the Keyboard, Screen nd Timer functions. 
+Antes de iniciar a instalação, certifique-se de ter:
 
-To build this example via command line, just switch to library root directory and type the following command:
-```
-$ gcc ./src/*.c -I./include -o cli-lib-example
-```
+Linux ou macOS
 
-To use this library to create your own apps, simply add source and header files to your project and compile it together with your own code, 
-replacing the main.c file to your own.
+GCC instalado
+Verifique com:
+
+gcc --version
+
+
+No Ubuntu, instale com:
+
+sudo apt update
+sudo apt install build-essential
+
+## 2. Clonar o projeto
+
+Clone o repositório do jogo:
+
+git clone https://github.com/SEU-USUARIO/SEU-REPOSITORIO.git
+cd SEU-REPOSITORIO
+
+## 3. Baixar e adicionar a biblioteca cli-lib
+
+O jogo utiliza a biblioteca cli-lib, responsável pelas funções de entrada e saída no terminal.
+
+Baixar:
+git clone https://github.com/tgfb/cli-lib.git
+
+
+A pasta do jogo deve ficar assim:
+
+/seu-jogo
+   ├── cli-lib/
+   ├── src/
+   ├── include/
+   └── main.c
+
+## 4. Compilar o jogo
+Se os arquivos do seu jogo estiverem em /src:
+gcc ./src/*.c ./cli-lib/src/*.c -I./include -I./cli-lib/include -o jogo
+
+Se o main.c estiver na raiz do projeto:
+gcc main.c ./cli-lib/src/*.c -I./cli-lib/include -o jogo
+
+## 5. Executar
+
+Após compilar, execute o jogo:
+
+./jogo
+
+---
 
 ## 🎮 Jogo Educativo de Lógica Proposicional
 
