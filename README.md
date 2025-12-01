@@ -97,6 +97,7 @@ Certifique-se de ter um ambiente **Linux ou macOS** e o **GCC** (GNU Compiler Co
 Verifique com:
 ```bash
 gcc --version
+```
 
 ## No Ubuntu/Debian, você pode instalar com:
 
@@ -161,7 +162,7 @@ Você pode jogar novamente para tentar superar seu próprio recorde de pontuaç�
 
 ---
 
-### 🧑‍🤝‍🧑 Equipe
+## 🧑‍🤝‍🧑 Equipe
 
 A equipe responsável por este projeto é composta por:
 
