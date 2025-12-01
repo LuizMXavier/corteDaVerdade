@@ -127,17 +127,22 @@ git clone [https://github.com/tgfb/cli-lib.git](https://github.com/tgfb/cli-lib.
 ## 3. Compilar o Jogo
 Ajuste o comando conforme a localização dos seus arquivos .c:
 
-# Se os arquivos do seu jogo estiverem em /src
+### Se os arquivos do seu jogo estiverem em /src
+
+```bash
 gcc ./src/*.c ./cli-lib/src/*.c -I./include -I./cli-lib/include -o jogo
+```
+### Se o main.c estiver na raiz do projeto
 
-# Se o main.c estiver na raiz do projeto
+```bash
 gcc main.c ./cli-lib/src/*.c -I./cli-lib/include -o jogo
-
+```
 ## 4. Executar
 Após compilar, execute o jogo:
 
+```bash
 ./jogo
-
+```
 ---
 
 ### 🔚 Encerramento
