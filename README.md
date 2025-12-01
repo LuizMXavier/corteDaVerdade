@@ -138,7 +138,7 @@ Após compilar, execute o jogo:
 
 ---
 
-## 🔚 Encerramento
+### 🔚 Encerramento
 Ao fim da sessão:
 
 * Sua pontuação total é calculada.
@@ -161,7 +161,7 @@ Você pode jogar novamente para tentar superar seu próprio recorde de pontuaç�
 
 ---
 
-## 🧑‍🤝‍🧑 Equipe
+### 🧑‍🤝‍🧑 Equipe
 
 A equipe responsável por este projeto é composta por:
 
