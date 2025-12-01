@@ -1,43 +1,120 @@
-## 🎮 Jogo Educativo de Lógica Proposicional
-## Programação Imperativa e Funcional - 2025.2.
-## Instituição Cesar School
+# 🏛️ Corte da Verdade: Jogo Educativo de Lógica Proposicional
 
---
+[![Feito com C](https://img.shields.io/badge/Feito%20com-C-blue.svg)](https://isocpp.org/)
+[![Licença: MIT](https://img.shields.io/badge/Licen%C3%A7a-MIT-yellow.svg)](LICENSE)
+[![Status do Projeto](https://img.shields.io/badge/Status-Conclu%C3%ADdo-brightgreen.svg)]()
 
-## 🚀 Como instalar e rodar o jogo
-## 1. Pré-requisitos
+---
 
-Antes de iniciar a instalação, certifique-se de ter:
+## 🎮 Visão Geral do Projeto
 
-Linux ou macOS
+O **Corte da Verdade** é um jogo interativo e educativo desenvolvido para o terminal, focado em **Lógica Proposicional**. Ele foi concebido para desafiar o jogador a aplicar conceitos de lógica, como tautologias e tabelas-verdade, em um ambiente de jogo envolvente.
 
-GCC instalado
+Este projeto foi desenvolvido como trabalho final para a disciplina de **Programação Imperativa e Funcional - 2025.2** da **Cesar School**.
+
+![Captura de tela da tela principal do jogo](images/tela_inicial.jpeg) 
+
+### 🎭 Tema e Narrativa
+O jogador assume o papel de um **Réu** em um tribunal fictício onde ninguém pode mentir. Para vencer, é preciso construir argumentos irrefutáveis (tautologias) que o Juiz é obrigado a aceitar.
+
+**Componentes do Jogo:**
+O jogador deve construir **Fórmulas Bem Formadas (FBFs)** utilizando:
+* **Variáveis**: `p`, `q`, `r`
+* **Conectores**: `v` (ou), `^` (e), `~` (não), `→` (implica), `↔` (bi-implica)
+* **Símbolos de Agrupamento**: `()` e `[]`
+
+---
+
+## 🎯 Objetivo do Jogador
+
+Em cada nível, você recebe um conjunto limitado de peças lógicas (variáveis e conectores) e deve montar a **tautologia-alvo** daquele desafio.
+
+* Você tem **3 tentativas por nível** para acertar a fórmula-alvo.
+* **Não é permitido repetir a mesma expressão** no mesmo nível.
+
+**O jogo contém:**
+* **9 desafios principais** divididos em 3 níveis de dificuldade (Básico, Intermediário, Avançado).
+
+### 📊 Níveis de Dificuldade
+
+| Nível | Variáveis | Linhas da tabela verdade | Exemplo |
+| :---: | :-------: | :----------------------: | :------ |
+| Básico | até 1 (`p`) | 2 | `p v ~ p` |
+| Intermediário | até 2 (`p`, `q`) | 4 | `(p ^ q) → p` |
+| Avançado | até 3 (`p`, `q`, `r`) | 8 | `(p ^ (q v r)) → p` |
+
+---
+
+## 🔁 Estrutura de uma Rodada
+
+1.  O jogo apresenta as peças lógicas disponíveis para a construção da fórmula.
+2.  O jogador insere a **FBF** para julgamento.
+3.  O resultado (acerto ou erro) é apresentado.
+    
+    ![Captura de tela da tela de erro](images/tela_error.jpeg) 
+    
+4.  Na 2ª tentativa, uma frase é apresentada, fornecendo um contexto narrativo à fórmula:
+    
+    ![Captura de tela da tela de frase](images/tela_frase.jpeg) 
+    
+5.  Em caso de acerto:
+    
+    ![Captura de tela da tela de acerto](images/tela_acerto.jpeg) 
+    
+6.  **Sistema de Pontuação Extra (Tabela Verdade):** Caso não acerte em nenhuma das três tentativas, o jogo monta a tabela verdade da última fórmula construída. Cada linha **VERDADEIRA (V)** da tabela verdade vale **1 ponto extra**.
+    
+    ![Captura de tela da tabela verdade](images/tela_tabela.jpeg) 
+
+---
+
+## 🏆 Sistema de Pontuação
+
+### ✔️ Pontos por Acerto
+
+| Tentativa | Pontos |
+| :---: | :---: |
+| 1ª tentativa | **50 pts** |
+| 2ª tentativa | **30 pts** |
+| 3ª tentativa | **20 pts** |
+
+### ⭐ Fase Bônus
+
+Durante a fase bônus, os riscos e recompensas são maiores, focando na identificação de Sofismas/Silogismos:
+* **Acerto (Sofisma/Silogismo correto):** Sua pontuação na rodada é **dobrada**.
+* **Resposta Errada:** Você perde **metade dos pontos**.
+* **Permanecer Calado (Passar):** Não há alteração de pontuação.
+    
+    ![Captura de tela da fase bônus](images/tela_bonus.jpeg) 
+
+---
+
+## 🚀 Como Instalar e Rodar
+
+### Pré-requisitos
+
+Certifique-se de ter um ambiente **Linux ou macOS** e o **GCC** (GNU Compiler Collection) instalado.
+
 Verifique com:
-
+```bash
 gcc --version
 
-
-No Ubuntu, instale com:
+## No Ubuntu/Debian, você pode instalar com:
 
 sudo apt update
 sudo apt install build-essential
 
-## 2. Clonar o projeto
+# Passo a Passo
 
-Clone o repositório do jogo:
-
-git clone https://github.com/SEU-USUARIO/SEU-REPOSITORIO.git
+## 1. Clonar o Repositório
+git clone [https://github.com/SEU-USUARIO/SEU-REPOSITORIO.git](https://github.com/SEU-USUARIO/SEU-REPOSITORIO.git)
 cd SEU-REPOSITORIO
 
-## 3. Baixar e adicionar a biblioteca cli-lib
-
+## 2. Baixar a Dependência (cli-lib)
 O jogo utiliza a biblioteca cli-lib, responsável pelas funções de entrada e saída no terminal.
 
-Baixar:
-git clone https://github.com/tgfb/cli-lib.git
+git clone [https://github.com/tgfb/cli-lib.git](https://github.com/tgfb/cli-lib.git)
 
-
-A pasta do jogo deve ficar assim:
+## A estrutura final das pastas do projeto deve ser:
 
 /seu-jogo
    ├── cli-lib/
@@ -45,136 +122,21 @@ A pasta do jogo deve ficar assim:
    ├── include/
    └── main.c
 
-## 4. Compilar o jogo
-Se os arquivos do seu jogo estiverem em /src:
+## 3. Compilar o Jogo
+Ajuste o comando conforme a localização dos seus arquivos .c:
+
+# Se os arquivos do seu jogo estiverem em /src
 gcc ./src/*.c ./cli-lib/src/*.c -I./include -I./cli-lib/include -o jogo
 
-Se o main.c estiver na raiz do projeto:
+# Se o main.c estiver na raiz do projeto
 gcc main.c ./cli-lib/src/*.c -I./cli-lib/include -o jogo
 
-## 5. Executar
-
+## 4. Executar
 Após compilar, execute o jogo:
 
 ./jogo
 
 ---
-
-# 🏛️ Corte da Verdade
-
----
-![Captura de tela da tela principal do jogo](images/tela_inicial.jpeg)
----
-O Corte da Verdade é um jogo interativo e educativo no qual o jogador assume o papel de um **réu** em um tribunal onde ninguém pode mentir. Para vencer, você deve montar **tautologias** usando variáveis e conectivos lógicos — e convencer o juiz de que seu argumento é irrefutável.
-
-## 📌 Índice
-* Visão Geral
-* Tema e Narrativa
-* Objetivo do Jogador
-* Componentes do Jogo
-* Níveis de Dificuldade
-* Estrutura de uma Rodada
-* Sistema de Pontuação
-* Encerramento
-* Equipe
-
----
-
-## 🧠 Visão Geral
-O jogador deve construir fórmulas de lógica proposicional utilizando:
-
-* **Variáveis**: p, q, r
-* **Conectores**: v, ^, ~, →, ↔
-* **símbolos de agrupamento**: (), []
-
-Cada rodada apresenta peças limitadas, e o jogador deve usar a lógica para montar tautologias — fórmulas verdadeiras em todas as interpretações possíveis.
-
-## 🎭 Tema e Narrativa
-O jogo se passa no tribunal fictício chamado Corte da Verdade.
-
-**Variáveis narrativas (Exemplo de Afirmações)**:
-* p: “O réu é culpado.”
-* q: “A testemunha está dizendo a verdade.”
-* r: “A prova apresentada é válida.”
-
-**Exemplos de fórmulas:**
-* p v ~p — O réu é culpado ou não é culpado.
-* p → q — Se o réu é culpado, então a testemunha está dizendo a verdade.
-
-O juiz só aceita argumentos que sejam tautologias.
-
-Cada nível tem uma **fórmula-alvo específica**.
-
-## 🎯 Objetivo do Jogador
-Você controla o **Réu**.
-Em cada nível:
-
-* Recebe um conjunto limitado de peças lógicas (variáveis e conectores).
-* Deve montar uma fórmula bem formada (FBF).
-* Tem **3 tentativas por nível** para acertar a tautologia-alvo.
-* **Não é permitido repetir a mesma expressão no mesmo nível**.
-* Mesmo que erre, sua última fórmula ainda gera pontos pela tabela verdade.
-
-**O jogo contém:**
-* **3 níveis fáceis** (Nível 1 - Básico)
-* **3 níveis médios** (Nível 2 - Intermediário)
-* **3 níveis difíceis** (Nível 3 - Avançado)
-* Total: **9 desafios principais**
-
-
-## 📊 Níveis de Dificuldade
-| Nível | Variáveis | Linhas da tabela verdade | Exemplo |
-| :---: | :-------: | :----------------------: | :------ |
-| Básico | até 1 (p) | 2 | p v ~ p  |
-| Intermediário | até 2 (p, q) | 4 | (p^ q) → p |
-| Avançado | até 3 (p, q, r) | 8 | (p^ (q v r)) → p |
-
-## 🔁 Estrutura de uma Rodada
-O jogo apresenta as peças disponíveis (variáveis, conectores e símbolos de agrupamento).
-
-**Exemplo**: p, p, v, ~. Com esse pacote, é possível montar a tautologia p v ~ p.
-
-1.  O jogador faz a 1ª tentativa:
-    * Acertou. Pontuação máxima.
-    * Errou. Vai para segunda tentativa.
-
-    ![Captura de tela da tela principal do jogo](images/tela_error.jpeg)
-
-3.  2ª tentativa:
-    Na segunda tentativa aparece a frase.
-      
-    ![Captura de tela da tela principal do jogo](images/tela_frase.jpeg)
-   
-    * Acertou. Pontuação intermediária.
-  
-    ![Captura de tela da tela principal do jogo](images/tela_acerto.jpeg)
-    
-5.  3ª tentativa:
-    * Acertou. Menor pontuação.
-6.  Caso não acerte em nenhuma das três:
-    * O jogo monta a tabela verdade da última fórmula construída.
-    * Cada linha **VERDADEIRA** (V) da tabela verdade vale **1 ponto extra**.
- 
-![Captura de tela da tela principal do jogo](images/tela_tabela.jpeg)
-
-
-## 🏆 Sistema de Pontuação
-### ✔️ Pontos por acerto
-| Tentativa | Pontos |
-| :---: | :---: |
-| 1ª tentativa | **50 pts** |
-| 2ª tentativa | **30 pts** |
-| 3ª tentativa | **20 pts** |
-
-
-### ⭐ Fase Bônus
-* **Sofisma/Silogismo correto** sua pontuação é **dobrada**.
-* **Resposta errada** você perde **metade dos pontos**.
-* **Permanecer calado** você não perde **os pontos**.
-  
-![Captura de tela da tela principal do jogo](images/tela_bonus.jpeg)
-
----  
 
 ## 🔚 Encerramento
 Ao fim da sessão:
