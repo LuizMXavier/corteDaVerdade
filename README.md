@@ -113,8 +113,9 @@ cd SEU-REPOSITORIO
 ## 2. Baixar a Dependência (cli-lib)
 O jogo utiliza a biblioteca cli-lib, responsável pelas funções de entrada e saída no terminal.
 
-```bash git clone [https://github.com/tgfb/cli-lib.git](https://github.com/tgfb/cli-lib.git)```
-
+```bash
+git clone [https://github.com/tgfb/cli-lib.git](https://github.com/tgfb/cli-lib.git)
+```
 ## A estrutura final das pastas do projeto deve ser:
 
 /seu-jogo
