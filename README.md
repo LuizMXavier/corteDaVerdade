@@ -101,15 +101,17 @@ gcc --version
 
 ## No Ubuntu/Debian, você pode instalar com:
 
+```bash
 sudo apt update
 sudo apt install build-essential
-
+```
 # Passo a Passo
 
 ## 1. Clonar o Repositório
+```bash
 git clone [https://github.com/SEU-USUARIO/SEU-REPOSITORIO.git](https://github.com/SEU-USUARIO/SEU-REPOSITORIO.git)
 cd SEU-REPOSITORIO
-
+```
 ## 2. Baixar a Dependência (cli-lib)
 O jogo utiliza a biblioteca cli-lib, responsável pelas funções de entrada e saída no terminal.
 
